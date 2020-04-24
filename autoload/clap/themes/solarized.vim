@@ -1,7 +1,4 @@
-let s:save_cpo = &cpoptions
-set cpoptions&vim
-
-function s:SetClapTheme() abort
+function! clap#themes#solarized#init() abort
     if &background == 'dark'
         let s:palette = {
                     \ 'display':                { 'guifg': '#839496', 'ctermfg': '102', 'guibg': '#002b36', 'ctermbg': '17' },
@@ -36,14 +33,3 @@ function s:SetClapTheme() abort
 
     let g:clap#themes#solarized#palette = s:palette
 endfunction
-
-call s:SetClapTheme()
-
-augroup VimClapThemesSolarized
-    autocmd!
-    autocmd ColorschemePre * call <SID>SetClapTheme()
-augroup END
-
-let &cpoptions = s:save_cpo
-unlet s:save_cpo
-
