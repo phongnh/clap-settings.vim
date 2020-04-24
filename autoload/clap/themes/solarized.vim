@@ -14,6 +14,9 @@ function s:SetClapTheme() abort
                     \ 'selected':               { 'guifg': '#268bd2', 'guibg': '#073642', 'ctermfg': '32',  'ctermbg': '23', 'cterm': 'bold', 'gui': 'bold' },
                     \ 'selected_sign':          { 'guifg': '#dc322f', 'guibg': '#073642', 'ctermfg': '166', 'ctermbg': '23', 'cterm': 'bold', 'gui': 'bold' },
                     \ }
+        if has('nvim')
+            let s:palette.preview = { 'guifg': '#93a1a1', 'guibg': '#073642', 'ctermfg': '109', 'ctermbg': '23' }
+        endif
     else
         let s:palette = {
                     \ 'display':                { 'guifg': '#657b83', 'guibg': '#fdf6e3', 'ctermfg': '66',  'ctermbg': '230' },
@@ -26,6 +29,9 @@ function s:SetClapTheme() abort
                     \ 'selected':               { 'guifg': '#268bd2', 'guibg': '#eee8d5', 'ctermfg': '32',  'ctermbg': '224', 'cterm': 'bold', 'gui': 'bold' },
                     \ 'selected_sign':          { 'guifg': '#dc322f', 'guibg': '#eee8d5', 'ctermfg': '166', 'ctermbg': '224', 'cterm': 'bold', 'gui': 'bold' },
                     \ }
+        if has('nvim')
+            let s:palette.preview = { 'guifg': '#586e75', 'guibg': '#eee8d5', 'ctermfg': '60',  'ctermbg': '224' }
+        endif
     endif
 
     let g:clap#themes#solarized#palette = s:palette
