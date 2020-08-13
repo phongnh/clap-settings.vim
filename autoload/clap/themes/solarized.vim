@@ -54,6 +54,7 @@ function! clap#themes#solarized#init() abort
         let s:clap_file_style = 'ctermfg=' . s:base00.xterm . ' ctermbg=NONE guifg=' . s:base00.hex . ' guibg=NONE'
     endif
 
+    execute 'highlight clear ClapFile'
     execute 'highlight ClapFile '. s:clap_file_style
 
     let g:clap#themes#solarized#palette = s:palette
