@@ -1,35 +1,60 @@
+" Copy this definition style from https://github.com/liuchengxu/vim-clap
+" Use definition to easily modify palette
+let s:base03  = { 'hex': '#002b36', 'xterm': '234', 'xterm_hex': '#1c1c1c' }
+let s:base02  = { 'hex': '#073642', 'xterm': '235', 'xterm_hex': '#262626' }
+let s:base01  = { 'hex': '#586e75', 'xterm': '240', 'xterm_hex': '#585858' }
+let s:base00  = { 'hex': '#657b83', 'xterm': '241', 'xterm_hex': '#626262' }
+let s:base0   = { 'hex': '#839496', 'xterm': '244', 'xterm_hex': '#808080' }
+let s:base1   = { 'hex': '#93a1a1', 'xterm': '245', 'xterm_hex': '#8a8a8a' }
+let s:base2   = { 'hex': '#eee8d5', 'xterm': '254', 'xterm_hex': '#e4e4e4' }
+let s:base3   = { 'hex': '#fdf6e3', 'xterm': '230', 'xterm_hex': '#ffffd7' }
+let s:yellow  = { 'hex': '#b58900', 'xterm': '136', 'xterm_hex': '#af8700' }
+let s:orange  = { 'hex': '#cb4b16', 'xterm': '166', 'xterm_hex': '#d75f00' }
+let s:red     = { 'hex': '#dc322f', 'xterm': '160', 'xterm_hex': '#d70000' }
+let s:magenta = { 'hex': '#d33682', 'xterm': '125', 'xterm_hex': '#af005f' }
+let s:violet  = { 'hex': '#6c71c4', 'xterm':  '61', 'xterm_hex': '#5f5faf' }
+let s:blue    = { 'hex': '#268bd2', 'xterm':  '33', 'xterm_hex': '#0087ff' }
+let s:cyan    = { 'hex': '#2aa198', 'xterm':  '37', 'xterm_hex': '#00afaf' }
+let s:green   = { 'hex': '#859900', 'xterm':  '64', 'xterm_hex': '#5f8700' }
+
 function! clap#themes#solarized#init() abort
     if &background == 'dark'
         let s:palette = {
-                    \ 'display':                { 'guifg': '#839496', 'ctermfg': '244', 'guibg': '#002b36', 'ctermbg': '234' },
-                    \ 'input':                  { 'guibg': '#002b36', 'ctermbg': '234' },
-                    \ 'spinner':                { 'guifg': '#b58900', 'ctermfg': '136', 'guibg': '#002b36', 'ctermbg': '234', 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'search_text':            { 'guifg': '#839496', 'ctermfg': '244', 'guibg': '#002b36', 'ctermbg': '234', 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'preview':                { 'guifg': '#839496', 'ctermfg': '244', 'guibg': '#002b36', 'ctermbg': '234' },
-                    \ 'current_selection':      { 'guibg': '#073642', 'ctermbg': '235',  'gui':   'bold',    'cterm':   'bold' },
-                    \ 'current_selection_sign': { 'guifg': '#cb4b16', 'ctermfg': '166', 'guibg': '#073642', 'ctermbg': '235', 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'selected':               { 'guifg': '#268bd2', 'ctermfg': '33',  'guibg': '#073642', 'ctermbg': '235', 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'selected_sign':          { 'guifg': '#dc322f', 'ctermfg': '160', 'guibg': '#073642', 'ctermbg': '235', 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'display':                { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
+                    \ 'input':                  { 'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
+                    \ 'spinner':                { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base03.hex, 'ctermbg': s:base03.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'search_text':            { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'preview':                { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
+                    \ 'current_selection':      { 'guibg': s:base02.hex, 'ctermbg': s:base02.xterm, 'gui':   'bold',       'cterm':   'bold'          },
+                    \ 'current_selection_sign': { 'guifg': s:orange.hex, 'ctermfg': s:orange.xterm, 'guibg': s:base02.hex, 'ctermbg': s:base02.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'selected':               { 'guifg': s:blue.hex,   'ctermfg': s:blue.xterm,   'guibg': s:base02.hex, 'ctermbg': s:base02.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'selected_sign':          { 'guifg': s:red.hex,    'ctermfg': s:red.xterm,    'guibg': s:base02.hex, 'ctermbg': s:base02.xterm, 'gui': 'bold', 'cterm': 'bold' },
                     \ }
         if has('nvim')
-            let s:palette.preview = { 'guifg': '#93a1a1', 'ctermfg': '109', 'guibg': '#073642', 'ctermbg': '235' }
+            let s:palette.preview = { 'guifg': s:base1.hex, 'ctermfg': s:base1.xterm, 'guibg': s:base02.hex, 'ctermbg': s:base02.xterm }
         endif
+
+        let s:clap_file_style = 'ctermfg=' . s:base0.xterm . ' ctermbg=NONE guifg=' . s:base0.hex . ' guibg=NONE'
     else
         let s:palette = {
-                    \ 'display':                { 'guifg': '#657b83', 'ctermbg': '230', 'guibg': '#fdf6e3', 'ctermfg': '230' },
-                    \ 'input':                  { 'guibg': '#fdf6e3', 'ctermbg': '230'  },
-                    \ 'spinner':                { 'guifg': '#b58900', 'ctermfg': '136', 'guibg': '#fdf6e3', 'ctermbg': '230', 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'search_text':            { 'guifg': '#657b83', 'ctermfg': '241', 'guibg': '#fdf6e3', 'ctermbg': '230', 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'preview':                { 'guifg': '#657b83', 'ctermfg': '241', 'guibg': '#fdf6e3', 'ctermbg': '230' },
-                    \ 'current_selection':      { 'guibg': '#eee8d5', 'ctermbg': '224', 'gui':   'bold',    'cterm':   'bold' },
-                    \ 'current_selection_sign': { 'guifg': '#cb4b16', 'ctermfg': '166', 'guibg': '#eee8d5', 'ctermbg': '224', 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'selected':               { 'guifg': '#268bd2', 'ctermfg': '33',  'guibg': '#eee8d5', 'ctermbg': '224', 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'selected_sign':          { 'guifg': '#dc322f', 'ctermfg': '160', 'guibg': '#eee8d5', 'ctermbg': '224', 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'display':                { 'guifg': s:base00.hex, 'ctermbg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermfg': s:base3.xterm  },
+                    \ 'input':                  { 'guibg': s:base3.hex,  'ctermbg': s:base3.xterm   },
+                    \ 'spinner':                { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'search_text':            { 'guifg': s:base00.hex, 'ctermfg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'preview':                { 'guifg': s:base00.hex, 'ctermfg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm  },
+                    \ 'current_selection':      { 'guibg': s:base2.hex,  'ctermbg': s:base2.xterm,  'gui':   'bold',      'cterm':   'bold'         },
+                    \ 'current_selection_sign': { 'guifg': s:orange.hex, 'ctermfg': s:orange.xterm, 'guibg': s:base2.hex, 'ctermbg': s:base2.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'selected':               { 'guifg': s:blue.hex,   'ctermfg': s:blue.xterm,   'guibg': s:base2.hex, 'ctermbg': s:base2.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'selected_sign':          { 'guifg': s:red.hex,    'ctermfg': s:red.xterm,    'guibg': s:base2.hex, 'ctermbg': s:base2.xterm, 'gui': 'bold', 'cterm': 'bold' },
                     \ }
         if has('nvim')
-            let s:palette.preview = { 'guifg': '#586e75', 'ctermfg': '60',  'guibg': '#eee8d5', 'ctermbg': '224' }
+            let s:palette.preview = { 'guifg': s:base01.hex, 'ctermfg': s:base01.xterm,  'guibg': s:base2.hex, 'ctermbg': s:base2.xterm }
         endif
+
+        let s:clap_file_style = 'ctermfg=' . s:base00.xterm . ' ctermbg=NONE guifg=' . s:base00.hex . ' guibg=NONE'
     endif
+
+    execute 'highlight ClapFile '. s:clap_file_style
 
     let g:clap#themes#solarized#palette = s:palette
 endfunction
