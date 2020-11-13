@@ -22,6 +22,7 @@ function! clap#themes#solarized#init() abort
         let s:palette = {
                     \ 'display':                { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
                     \ 'input':                  { 'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
+                    \ 'indicator':              { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base03.hex, 'ctermbg': s:base03.xterm },
                     \ 'spinner':                { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base03.hex, 'ctermbg': s:base03.xterm, 'gui': 'bold', 'cterm': 'bold' },
                     \ 'search_text':            { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm, 'gui': 'bold', 'cterm': 'bold' },
                     \ 'preview':                { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
@@ -39,6 +40,7 @@ function! clap#themes#solarized#init() abort
         let s:palette = {
                     \ 'display':                { 'guifg': s:base00.hex, 'ctermbg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermfg': s:base3.xterm  },
                     \ 'input':                  { 'guibg': s:base3.hex,  'ctermbg': s:base3.xterm   },
+                    \ 'indicator':              { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base3.hex,  'ctermbg': s:base3.xterm   },
                     \ 'spinner':                { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm, 'gui': 'bold', 'cterm': 'bold' },
                     \ 'search_text':            { 'guifg': s:base00.hex, 'ctermfg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm, 'gui': 'bold', 'cterm': 'bold' },
                     \ 'preview':                { 'guifg': s:base00.hex, 'ctermfg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm  },
