@@ -36,15 +36,6 @@ function! clap#themes#solarized#init() abort
         endif
 
         let s:clap_file_style = 'ctermfg=' . s:base0.xterm . ' ctermbg=NONE guifg=' . s:base0.hex . ' guibg=NONE'
-
-        let s:fuzzy = [
-                    \   [s:base03.xterm, s:base3.hex],
-                    \   [s:base02.xterm, s:base2.hex],
-                    \   [s:base01.xterm, s:base1.hex],
-                    \   [s:base00.xterm, s:base0.hex],
-                    \   [s:base0.xterm,  s:base00.hex],
-                    \   [s:base1.xterm,  s:base01.hex],
-                    \ ]
     else
         let s:palette = {
                     \ 'display':                { 'guifg': s:base00.hex, 'ctermbg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermfg': s:base3.xterm  },
@@ -63,18 +54,7 @@ function! clap#themes#solarized#init() abort
         endif
 
         let s:clap_file_style = 'ctermfg=' . s:base00.xterm . ' ctermbg=NONE guifg=' . s:base00.hex . ' guibg=NONE'
-
-        let s:fuzzy = [
-                    \   [s:base03.xterm, s:base03.hex],
-                    \   [s:base02.xterm, s:base02.hex],
-                    \   [s:base01.xterm, s:base01.hex],
-                    \   [s:base00.xterm, s:base00.hex],
-                    \   [s:base0.xterm,  s:base0.hex],
-                    \   [s:base1.xterm,  s:base1.hex],
-                    \ ]
     endif
-
-    let g:clap_fuzzy_match_hl_groups = s:fuzzy
 
     execute 'highlight clear ClapFile'
     execute 'highlight ClapFile '. s:clap_file_style
