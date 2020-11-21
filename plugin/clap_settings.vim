@@ -83,6 +83,9 @@ function! s:SetupClapFindTool() abort
     let idx = index(s:clap_available_find_tools, g:clap_find_tool)
     let cmd = get(s:clap_available_find_tools, idx > -1 ? idx : 0)
     let s:clap_find_tool = get(l:tools, cmd, '')
+endfunction
+
+function! s:SetupClapCommands() abort
     if strlen(s:clap_find_tool)
         command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache ++finder=%s', <bang>0 ? 'Clap!' : 'Clap', s:clap_find_tool) <q-args>
     else
@@ -91,6 +94,7 @@ function! s:SetupClapFindTool() abort
 endfunction
 
 call s:SetupClapFindTool()
+call s:SetupClapCommands()
 
 function! s:ToggleClapFollowLinks() abort
     if s:clap_follow_links == 0
