@@ -53,62 +53,6 @@ if executable('rg')
     let g:clap_provider_grep_opts = '-H --no-heading --hidden --vimgrep --smart-case' . (g:clap_grep_ignore_vcs ? ' --no-ignore-vcs' : '')
 endif
 
-let g:clap_find_tool    = get(g:, 'clap_find_tool', 'rg')
-let g:clap_follow_links = get(g:, 'clap_follow_links', 0)
-let s:clap_follow_links = g:clap_follow_links
-
-let s:clap_find_tools = {
-            \ 'rg': 'rg --color=never --no-ignore-vcs --ignore-dot --ignore-parent --hidden --files',
-            \ 'fd': 'fd --color=never --no-ignore-vcs --hidden --type file',
-            \ }
-
-let s:clap_find_with_follows_tools = {
-            \ 'rg': 'rg --color=never --no-ignore-vcs --ignore-dot --ignore-parent --hidden --follow --files',
-            \ 'fd': 'fd --color=never --no-ignore-vcs --hidden --follow --type file',
-            \ }
-
-function! s:DetectClapAvailableFindTools() abort
-    let s:clap_available_find_tools = []
-    for cmd in ['rg', 'fd']
-        if executable(cmd)
-            call add(s:clap_available_find_tools, cmd)
-        endif
-    endfor
-endfunction
-
-call s:DetectClapAvailableFindTools()
-
-function! s:SetupClapFindTool() abort
-    let l:tools = s:clap_follow_links ? s:clap_find_with_follows_tools : s:clap_find_tools
-    let idx = index(s:clap_available_find_tools, g:clap_find_tool)
-    let cmd = get(s:clap_available_find_tools, idx > -1 ? idx : 0)
-    let s:clap_find_tool = get(l:tools, cmd, '')
-endfunction
-
-function! s:SetupClapCommands() abort
-    if strlen(s:clap_find_tool)
-        command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache ++finder=%s', <bang>0 ? 'Clap!' : 'Clap', s:clap_find_tool) <q-args>
-    else
-        command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache', <bang>0 ? 'Clap!' : 'Clap') <q-args>
-    endif
-endfunction
-
-call s:SetupClapFindTool()
-call s:SetupClapCommands()
-
-function! s:ToggleClapFollowLinks() abort
-    if s:clap_follow_links == 0
-        let s:clap_follow_links = 1
-        echo 'Clap follows symlinks!'
-    else
-        let s:clap_follow_links = 0
-        echo 'Clap does not follow symlinks!'
-    endif
-    call s:SetupClapFindTool()
-endfunction
-
-command! ToggleClapFollowLinks call <SID>ToggleClapFollowLinks()
-
 function! s:ClapFindProjectDir(starting_path) abort
     if empty(a:starting_path)
         return ''
@@ -132,5 +76,86 @@ function! s:ClapFindProjectDir(starting_path) abort
 endfunction
 
 command! -bang ClapRoot execute (<bang>0 ? 'ClapFiles!' : 'ClapFiles') s:ClapFindProjectDir(expand('%:p:h'))
+
+let s:clap_available_commands = filter(['rg', 'fd'], 'executable(v:val)')
+
+if empty(s:clap_available_commands)
+    command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache', <bang>0 ? 'Clap!' : 'Clap') <q-args>
+    finish
+endif
+
+let g:clap_find_tool    = get(g:, 'clap_find_tool', 'rg')
+let g:clap_follow_links = get(g:, 'clap_follow_links', 0)
+let s:clap_follow_links = g:clap_follow_links
+
+let s:clap_find_commands = {
+            \ 'rg': 'rg --color=never --no-ignore-vcs --ignore-dot --ignore-parent --hidden --files',
+            \ 'fd': 'fd --color=never --no-ignore-vcs --hidden --type file',
+            \ }
+
+let s:clap_find_with_follows_commands = {
+            \ 'rg': 'rg --color=never --no-ignore-vcs --ignore-dot --ignore-parent --hidden --follow --files',
+            \ 'fd': 'fd --color=never --no-ignore-vcs --hidden --follow --type file',
+            \ }
+
+function! s:DetectClapCurrentCommand() abort
+    let idx = index(s:clap_available_commands, g:clap_find_tool)
+    let s:clap_current_command = get(s:clap_available_commands, idx > -1 ? idx : 0)
+endfunction
+
+function! s:BuildClapFinder() abort
+    if s:clap_follow_links == 1
+        let s:clap_finder = s:clap_find_with_follows_commands[s:clap_current_command]
+    else
+        let s:clap_finder = s:clap_find_commands[s:clap_current_command]
+    endif
+endfunction
+
+function! s:PrintClapCurrentCommandInfo() abort
+    echo 'Clap is using command `' . s:clap_finder . '`!'
+endfunction
+
+command! PrintClapCurrentCommandInfo call <SID>PrintClapCurrentCommandInfo()
+
+function! s:ChangeClapFinder(bang, command) abort
+    " Reset to default command
+    if a:bang
+        call s:DetectClapCurrentCommand()
+    elseif strlen(a:command)
+        if index(s:clap_available_commands, a:command) == -1
+            return
+        endif
+        let s:clap_current_command = a:command
+    else
+        let idx = index(s:clap_available_commands, s:clap_current_command)
+        let s:clap_current_command = get(s:clap_available_commands, idx + 1, s:clap_available_commands[0])
+    endif
+    call s:BuildClapFinder()
+    call s:PrintClapCurrentCommandInfo()
+endfunction
+
+function! s:ListClapAvailableCommands(...) abort
+    return s:clap_available_commands
+endfunction
+
+command! -nargs=? -bang -complete=customlist,<SID>ListClapAvailableCommands ChangeClapFinder call <SID>ChangeClapFinder(<bang>0, <q-args>)
+
+function! s:ToggleClapFollowLinks() abort
+    if s:clap_follow_links == 0
+        let s:clap_follow_links = 1
+        echo 'Clap follows symlinks!'
+    else
+        let s:clap_follow_links = 0
+        echo 'Clap does not follow symlinks!'
+    endif
+    call s:BuildClapFinder()
+endfunction
+
+command! ToggleClapFollowLinks call <SID>ToggleClapFollowLinks()
+
+command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache ++finder=%s', <bang>0 ? 'Clap!' : 'Clap', s:clap_finder) <q-args>
+
+call s:DetectClapCurrentCommand()
+call s:BuildClapFinder()
 
 let g:loaded_clap_settings_vim = 1
