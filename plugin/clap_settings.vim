@@ -33,7 +33,6 @@ let g:clap_prompt_format            = ' %spinner%%forerunner_status%%provider_id
 
 let g:clap_insert_mode_only   = v:true
 let g:clap_disable_run_rooter = v:true
-let g:clap_grep_ignore_vcs    = get(g:, 'clap_grep_ignore_vcs', 0)
 
 function! ClapPromptFormat() abort
     if g:clap.provider.id ==# 'files' && exists('g:__clap_provider_cwd')
@@ -50,7 +49,10 @@ let g:ClapPrompt = function('ClapPromptFormat')
 
 if executable('rg')
     let g:clap_provider_grep_executable = 'rg'
-    let g:clap_provider_grep_opts = '-H --no-heading --hidden --vimgrep --smart-case' . (g:clap_grep_ignore_vcs ? ' --no-ignore-vcs' : '')
+    let g:clap_provider_grep_opts = '-H --no-heading --line-number --column --hidden --smart-case'
+    if get(g:, 'clap_grep_ignore_vcs', 0)
+        let g:clap_provider_grep_opts .= ' --no-ignore-vcs'
+    endif
 endif
 
 function! s:ClapFindProjectDir(starting_path) abort
@@ -89,13 +91,8 @@ let g:clap_follow_links = get(g:, 'clap_follow_links', 0)
 let s:clap_follow_links = g:clap_follow_links
 
 let s:clap_find_commands = {
-            \ 'rg': 'rg --color=never --no-ignore-vcs --ignore-dot --ignore-parent --hidden --files',
-            \ 'fd': 'fd --color=never --no-ignore-vcs --hidden --type file',
-            \ }
-
-let s:clap_find_with_follows_commands = {
-            \ 'rg': 'rg --color=never --no-ignore-vcs --ignore-dot --ignore-parent --hidden --follow --files',
-            \ 'fd': 'fd --color=never --no-ignore-vcs --hidden --follow --type file',
+            \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent --hidden',
+            \ 'fd': 'fd --type file --color never --no-ignore-vcs --hidden',
             \ }
 
 function! s:DetectClapCurrentCommand() abort
@@ -104,10 +101,9 @@ function! s:DetectClapCurrentCommand() abort
 endfunction
 
 function! s:BuildClapFinder() abort
+    let s:clap_finder = s:clap_find_commands[s:clap_current_command]
     if s:clap_follow_links == 1
-        let s:clap_finder = s:clap_find_with_follows_commands[s:clap_current_command]
-    else
-        let s:clap_finder = s:clap_find_commands[s:clap_current_command]
+        let s:clap_finder = s:clap_finder . ' --follow'
     endif
 endfunction
 
