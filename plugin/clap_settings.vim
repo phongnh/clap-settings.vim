@@ -95,16 +95,21 @@ let s:clap_find_commands = {
             \ 'fd': 'fd --type file --color never --no-ignore-vcs --hidden',
             \ }
 
+function! s:BuildFindCommand() abort
+    let l:cmd = s:clap_find_commands[s:clap_current_command]
+    if s:clap_follow_links == 1
+        let l:cmd .= ' --follow'
+    endif
+    return l:cmd
+endfunction
+
 function! s:DetectClapCurrentCommand() abort
     let idx = index(s:clap_available_commands, g:clap_find_tool)
     let s:clap_current_command = get(s:clap_available_commands, idx > -1 ? idx : 0)
 endfunction
 
 function! s:BuildClapFinder() abort
-    let s:clap_finder = s:clap_find_commands[s:clap_current_command]
-    if s:clap_follow_links == 1
-        let s:clap_finder = s:clap_finder . ' --follow'
-    endif
+    let s:clap_finder = s:BuildFindCommand()
 endfunction
 
 function! s:PrintClapCurrentCommandInfo() abort
