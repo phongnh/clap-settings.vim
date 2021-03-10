@@ -23,7 +23,7 @@ if get(g:, 'clap_solarized_theme', 0)
     augroup END
 endif
 
-let g:clap_layout                   = { 'relative': 'editor', 'width': '65%', 'height': '50%',  'row': '20%', 'col': '15%' }
+let g:clap_layout                   = { 'relative': 'editor', 'width': '65%', 'height': '45%',  'row': '15%', 'col': '15%' }
 let g:clap_popup_cursor_shape       = ''
 let g:clap_preview_direction        = 'UD'
 let g:clap_search_box_border_style  = 'nil'
