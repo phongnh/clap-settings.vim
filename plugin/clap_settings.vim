@@ -25,6 +25,7 @@ endif
 
 let g:clap_layout                   = { 'relative': 'editor', 'width': '65%', 'height': '50%',  'row': '20%', 'col': '15%' }
 let g:clap_popup_cursor_shape       = ''
+let g:clap_preview_direction        = 'UD'
 let g:clap_search_box_border_style  = 'nil'
 let g:clap_enable_background_shadow = v:false
 let g:clap_current_selection_sign   = { 'text': '» ', 'texthl': 'ClapCurrentSelectionSign', 'linehl': 'ClapCurrentSelection' }
