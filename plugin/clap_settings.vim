@@ -90,14 +90,24 @@ endif
 let g:clap_find_tool    = get(g:, 'clap_find_tool', 'rg')
 let g:clap_follow_links = get(g:, 'clap_follow_links', 0)
 let s:clap_follow_links = g:clap_follow_links
+let g:clap_no_ignores   = get(g:, 'clap_no_ignores', 0)
+let s:clap_no_ignores   = g:clap_no_ignores
 
 let s:clap_find_commands = {
             \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent --hidden',
             \ 'fd': 'fd --type file --color never --no-ignore-vcs --hidden',
             \ }
 
+let s:clap_find_all_commands = {
+            \ 'rg': 'rg --files --color never --no-ignore --hidden',
+            \ 'fd': 'fd --type file --color never --no-ignore --hidden',
+            \ }
+
 function! s:BuildFindCommand() abort
     let l:cmd = s:clap_find_commands[s:clap_current_command]
+    if s:clap_no_ignores
+        let l:cmd = s:clap_find_all_commands[s:clap_current_command]
+    endif
     if s:clap_follow_links == 1
         let l:cmd .= ' --follow'
     endif
@@ -154,6 +164,19 @@ function! s:ToggleClapFollowLinks() abort
 endfunction
 
 command! ToggleClapFollowLinks call <SID>ToggleClapFollowLinks()
+
+function! s:ToggleClapNoIgnores() abort
+    if s:clap_no_ignores == 0
+        let s:clap_no_ignores = 1
+        echo 'Clap does not respect ignores!'
+    else
+        let s:clap_no_ignores = 0
+        echo 'Clap respects ignores!'
+    endif
+    call s:BuildClapFinder()
+endfunction
+
+command! ToggleClapNoIgnores call <SID>ToggleClapNoIgnores()
 
 command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache ++finder=%s', <bang>0 ? 'Clap!' : 'Clap', s:clap_finder) <q-args>
 
