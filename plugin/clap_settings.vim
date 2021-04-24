@@ -35,6 +35,30 @@ let g:clap_prompt_format            = ' %spinner%%forerunner_status%%provider_id
 let g:clap_insert_mode_only   = v:true
 let g:clap_disable_run_rooter = v:true
 
+let g:clap_file_root_markers = [
+            \ 'Gemfile',
+            \ 'rebar.config',
+            \ 'mix.exs',
+            \ 'Cargo.toml',
+            \ 'shard.yml',
+            \ 'go.mod'
+            \ ]
+
+let g:clap_root_markers = ['.git', '.hg', '.svn', '.bzr', '_darcs'] + g:clap_file_root_markers
+
+let s:clap_ignored_root_dirs = [
+            \ '/',
+            \ '/root',
+            \ '/Users',
+            \ '/home',
+            \ '/usr',
+            \ '/usr/local',
+            \ '/opt',
+            \ '/etc',
+            \ '/var',
+            \ expand('~'),
+            \ ]
+
 function! ClapPromptFormat() abort
     if g:clap.provider.id ==# 'files' && exists('g:__clap_provider_cwd')
         let cwd = fnamemodify(g:__clap_provider_cwd, ':~:.')
@@ -57,25 +81,35 @@ if executable('rg')
 endif
 
 function! s:ClapFindProjectDir(starting_path) abort
-    if empty(a:starting_path)
+    if empty(a:starting_dir)
         return ''
     endif
 
-    for root_marker in ['.git', '.hg', '.svn']
-        let root_dir = finddir(root_marker, a:starting_path . ';')
-        if empty(root_dir)
-            continue
-        endif
+    let l:root_dir = ''
 
-        let root_dir = substitute(root_dir, root_marker, '', '')
-        if !empty(root_dir)
-            let root_dir = fnamemodify(root_dir, ':p:~:.')
+    for l:root_marker in g:clap_root_markers
+        if index(g:clap_file_root_markers, l:root_marker) > -1
+            let l:root_dir = findfile(l:root_marker, a:starting_dir . ';')
+        else
+            let l:root_dir = finddir(l:root_marker, a:starting_dir . ';')
         endif
+        let l:root_dir = substitute(l:root_dir, l:root_marker . '$', '', '')
 
-        return root_dir
+        if strlen(l:root_dir)
+            let l:root_dir = fnamemodify(l:root_dir, ':p:h')
+            break
+        endif
     endfor
 
-    return ''
+    if empty(l:root_dir) || index(s:clap_ignored_root_dirs, l:root_dir) > -1
+        if stridx(a:starting_dir, getcwd()) == 0
+            let l:root_dir = getcwd()
+        else
+            let l:root_dir = a:starting_dir
+        endif
+    endif
+
+    return fnamemodify(l:root_dir, ':~')
 endfunction
 
 command! -bang ClapRoot execute (<bang>0 ? 'ClapFiles!' : 'ClapFiles') s:ClapFindProjectDir(expand('%:p:h'))
