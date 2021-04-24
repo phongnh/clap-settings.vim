@@ -84,6 +84,7 @@ let s:clap_available_commands = filter(['rg', 'fd'], 'executable(v:val)')
 
 if empty(s:clap_available_commands)
     command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache', <bang>0 ? 'Clap!' : 'Clap') <q-args>
+    command! -bang -nargs=? -complete=dir ClapFilesAll ClapFiles<bang> <args>
     finish
 endif
 
@@ -177,6 +178,24 @@ function! s:ToggleClapNoIgnores() abort
 endfunction
 
 command! ToggleClapNoIgnores call <SID>ToggleClapNoIgnores()
+
+function! s:ClapFilesAll(dir, bang) abort
+    let current = s:clap_no_ignores
+    try
+        let s:clap_no_ignores = 1
+        call s:BuildClapFinder()
+        if a:bang
+            execute 'ClapFiles!' a:dir
+        else
+            execute 'ClapFiles' a:dir
+        endif
+    finally
+        let s:clap_no_ignores = current
+        call s:BuildClapFinder()
+    endtry
+endfunction
+
+command! -bang -nargs=? -complete=dir ClapFilesAll call <SID>ClapFilesAll(<q-args>, <bang>0)
 
 command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache ++finder=%s', <bang>0 ? 'Clap!' : 'Clap', s:clap_finder) <q-args>
 
