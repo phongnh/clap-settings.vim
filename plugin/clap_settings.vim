@@ -102,14 +102,16 @@ function! s:ClapFindProjectDir(starting_path) abort
     endfor
 
     if empty(l:root_dir) || index(s:clap_ignored_root_dirs, l:root_dir) > -1
-        if stridx(a:starting_dir, getcwd()) == 0
+        if index(s:clap_ignored_root_dirs, getcwd()) > -1
+            let l:root_dir = a:starting_dir
+        elseif stridx(a:starting_dir, getcwd()) == 0
             let l:root_dir = getcwd()
         else
             let l:root_dir = a:starting_dir
         endif
     endif
 
-    return fnamemodify(l:root_dir, ':~')
+    return fnamemodify(l:root_dir, ':p:~')
 endfunction
 
 command! -bang ClapRoot execute (<bang>0 ? 'ClapFiles!' : 'ClapFiles') s:ClapFindProjectDir(expand('%:p:h'))
