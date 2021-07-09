@@ -80,7 +80,7 @@ if executable('rg')
     endif
 endif
 
-function! s:FindProjectDir(starting_path) abort
+function! s:FindProjectDir(starting_dir) abort
     if empty(a:starting_dir)
         return ''
     endif
