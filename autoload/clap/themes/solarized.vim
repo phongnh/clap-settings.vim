@@ -20,44 +20,191 @@ let s:green   = { 'hex': '#859900', 'xterm':  '64', 'xterm_hex': '#5f8700' }
 function! clap#themes#solarized#init() abort
     if &background == 'dark'
         let s:palette = {
-                    \ 'display':                { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
-                    \ 'input':                  { 'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
-                    \ 'indicator':              { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base03.hex, 'ctermbg': s:base03.xterm },
-                    \ 'spinner':                { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base03.hex, 'ctermbg': s:base03.xterm, 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'search_text':            { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm, 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'preview':                { 'guifg': s:base0.hex,  'ctermfg': s:base0.xterm,  'guibg': s:base03.hex, 'ctermbg': s:base03.xterm  },
-                    \ 'current_selection':      { 'guibg': s:base02.hex, 'ctermbg': s:base02.xterm, 'gui':   'bold',       'cterm':   'bold'          },
-                    \ 'current_selection_sign': { 'guifg': s:orange.hex, 'ctermfg': s:orange.xterm, 'guibg': s:base02.hex, 'ctermbg': s:base02.xterm, 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'selected':               { 'guifg': s:blue.hex,   'ctermfg': s:blue.xterm,   'guibg': s:base02.hex, 'ctermbg': s:base02.xterm, 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'selected_sign':          { 'guifg': s:red.hex,    'ctermfg': s:red.xterm,    'guibg': s:base02.hex, 'ctermbg': s:base02.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'display': {
+                    \   'guifg':   s:base0.hex,
+                    \   'ctermfg': s:base0.xterm,
+                    \   'guibg':   s:base03.hex,
+                    \   'ctermbg': s:base03.xterm,
+                    \ },
+                    \ 'input': {
+                    \   'guibg':   s:base03.hex,
+                    \   'ctermbg': s:base03.xterm
+                    \ },
+                    \ 'indicator': {
+                    \   'guifg':   s:yellow.hex,
+                    \   'ctermfg': s:yellow.xterm,
+                    \   'guibg':   s:base03.hex,
+                    \   'ctermbg': s:base03.xterm,
+                    \  },
+                    \ 'spinner': {
+                    \   'guifg':   s:yellow.hex,
+                    \   'ctermfg': s:yellow.xterm,
+                    \   'guibg':   s:base03.hex,
+                    \   'ctermbg': s:base03.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'search_text': {
+                    \   'guifg':   s:base0.hex,
+                    \   'ctermfg': s:base0.xterm,
+                    \   'guibg':   s:base03.hex,
+                    \   'ctermbg': s:base03.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'preview': {
+                    \   'guifg':   s:base0.hex,
+                    \   'ctermfg': s:base0.xterm,
+                    \   'guibg':   s:base03.hex,
+                    \   'ctermbg': s:base03.xterm,
+                    \ },
+                    \ 'current_selection': {
+                    \   'guibg':   s:base02.hex,
+                    \   'ctermbg': s:base02.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'current_selection_sign': {
+                    \   'guifg':   s:orange.hex,
+                    \   'ctermfg': s:orange.xterm,
+                    \   'guibg':   s:base02.hex,
+                    \   'ctermbg': s:base02.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'selected': {
+                    \   'guifg':   s:blue.hex,
+                    \   'ctermfg': s:blue.xterm,
+                    \   'guibg':   s:base02.hex,
+                    \   'ctermbg': s:base02.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'selected_sign': {
+                    \   'guifg':   s:red.hex,
+                    \   'ctermfg': s:red.xterm,
+                    \   'guibg':   s:base02.hex,
+                    \   'ctermbg': s:base02.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold'
+                    \ },
                     \ }
         if has('nvim')
-            let s:palette.preview = { 'guifg': s:base1.hex, 'ctermfg': s:base1.xterm, 'guibg': s:base02.hex, 'ctermbg': s:base02.xterm }
+            let s:palette.preview = {
+                        \ 'guifg':   s:base1.hex,
+                        \ 'ctermfg': s:base1.xterm,
+                        \ 'guibg':   s:base02.hex,
+                        \ 'ctermbg': s:base02.xterm
+                        \ }
         endif
+
+        let s:fuzzy = [
+                    \   [s:base03.xterm, s:base3.hex],
+                    \   [s:base02.xterm, s:base2.hex],
+                    \   [s:base01.xterm, s:base1.hex],
+                    \   [s:base00.xterm, s:base0.hex],
+                    \   [s:base0.xterm, s:base00.hex],
+                    \   [s:base1.xterm, s:base01.hex],
+                    \ ]
 
         let s:clap_file_style = 'ctermfg=' . s:base0.xterm . ' ctermbg=NONE guifg=' . s:base0.hex . ' guibg=NONE'
     else
         let s:palette = {
-                    \ 'display':                { 'guifg': s:base00.hex, 'ctermbg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermfg': s:base3.xterm  },
-                    \ 'input':                  { 'guibg': s:base3.hex,  'ctermbg': s:base3.xterm   },
-                    \ 'indicator':              { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base3.hex,  'ctermbg': s:base3.xterm   },
-                    \ 'spinner':                { 'guifg': s:yellow.hex, 'ctermfg': s:yellow.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm, 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'search_text':            { 'guifg': s:base00.hex, 'ctermfg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm, 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'preview':                { 'guifg': s:base00.hex, 'ctermfg': s:base00.xterm, 'guibg': s:base3.hex, 'ctermbg': s:base3.xterm  },
-                    \ 'current_selection':      { 'guibg': s:base2.hex,  'ctermbg': s:base2.xterm,  'gui':   'bold',      'cterm':   'bold'         },
-                    \ 'current_selection_sign': { 'guifg': s:orange.hex, 'ctermfg': s:orange.xterm, 'guibg': s:base2.hex, 'ctermbg': s:base2.xterm, 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'selected':               { 'guifg': s:blue.hex,   'ctermfg': s:blue.xterm,   'guibg': s:base2.hex, 'ctermbg': s:base2.xterm, 'gui': 'bold', 'cterm': 'bold' },
-                    \ 'selected_sign':          { 'guifg': s:red.hex,    'ctermfg': s:red.xterm,    'guibg': s:base2.hex, 'ctermbg': s:base2.xterm, 'gui': 'bold', 'cterm': 'bold' },
+                    \ 'display': {
+                    \   'guifg':   s:base00.hex,
+                    \   'ctermbg': s:base00.xterm,
+                    \   'guibg':   s:base3.hex,
+                    \   'ctermfg': s:base3.xterm,
+                    \ },
+                    \ 'input': {
+                    \   'guibg':   s:base3.hex,
+                    \   'ctermbg': s:base3.xterm,
+                    \ },
+                    \ 'indicator': {
+                    \   'guifg':   s:yellow.hex,
+                    \   'ctermfg': s:yellow.xterm,
+                    \   'guibg':   s:base3.hex,
+                    \   'ctermbg': s:base3.xterm,
+                    \ },
+                    \ 'spinner': {
+                    \   'guifg':   s:yellow.hex,
+                    \   'ctermfg': s:yellow.xterm,
+                    \   'guibg':   s:base3.hex,
+                    \   'ctermbg': s:base3.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'search_text': {
+                    \   'guifg':   s:base00.hex,
+                    \   'ctermfg': s:base00.xterm,
+                    \   'guibg':   s:base3.hex,
+                    \   'ctermbg': s:base3.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'preview': {
+                    \   'guifg':   s:base00.hex,
+                    \   'ctermfg': s:base00.xterm,
+                    \   'guibg':   s:base3.hex,
+                    \   'ctermbg': s:base3.xterm ,
+                    \ },
+                    \ 'current_selection': {
+                    \   'guibg':   s:base2.hex,
+                    \   'ctermbg': s:base2.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'current_selection_sign': {
+                    \   'guifg':   s:orange.hex,
+                    \   'ctermfg': s:orange.xterm,
+                    \   'guibg':   s:base2.hex,
+                    \   'ctermbg': s:base2.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'selected': {
+                    \   'guifg':   s:blue.hex,
+                    \   'ctermfg': s:blue.xterm,
+                    \   'guibg':   s:base2.hex,
+                    \   'ctermbg': s:base2.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
+                    \ 'selected_sign': {
+                    \   'guifg':   s:red.hex,
+                    \   'ctermfg': s:red.xterm,
+                    \   'guibg':   s:base2.hex,
+                    \   'ctermbg': s:base2.xterm,
+                    \   'gui':     'bold',
+                    \   'cterm':   'bold',
+                    \ },
                     \ }
+
         if has('nvim')
-            let s:palette.preview = { 'guifg': s:base01.hex, 'ctermfg': s:base01.xterm,  'guibg': s:base2.hex, 'ctermbg': s:base2.xterm }
+            let s:palette.preview = {
+                        \ 'guifg':   s:base01.hex,
+                        \ 'ctermfg': s:base01.xterm,
+                        \ 'guibg':   s:base2.hex,
+                        \ 'ctermbg': s:base2.xterm,
+                        \ }
         endif
+
+        let s:fuzzy = [
+                    \   [s:base03.xterm, s:base03.hex],
+                    \   [s:base02.xterm, s:base02.hex],
+                    \   [s:base01.xterm, s:base01.hex],
+                    \   [s:base00.xterm, s:base00.hex],
+                    \   [s:base0.xterm, s:base0.hex],
+                    \   [s:base1.xterm, s:base1.hex],
+                    \ ]
 
         let s:clap_file_style = 'ctermfg=' . s:base00.xterm . ' ctermbg=NONE guifg=' . s:base00.hex . ' guibg=NONE'
     endif
 
+    let g:clap_fuzzy_match_hl_groups = s:fuzzy
+
     execute 'highlight clear ClapFile'
-    execute 'highlight ClapFile '. s:clap_file_style
+    execute 'highlight ClapFile ' . s:clap_file_style
 
     let g:clap#themes#solarized#palette = s:palette
 endfunction
