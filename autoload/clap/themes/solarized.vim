@@ -106,8 +106,6 @@ function! clap#themes#solarized#init() abort
                     \   [s:base0.xterm, s:base00.hex],
                     \   [s:base1.xterm, s:base01.hex],
                     \ ]
-
-        let s:clap_file_style = 'ctermfg=' . s:base0.xterm . ' ctermbg=NONE guifg=' . s:base0.hex . ' guibg=NONE'
     else
         let s:palette = {
                     \ 'display': {
@@ -197,14 +195,16 @@ function! clap#themes#solarized#init() abort
                     \   [s:base0.xterm, s:base0.hex],
                     \   [s:base1.xterm, s:base1.hex],
                     \ ]
-
-        let s:clap_file_style = 'ctermfg=' . s:base00.xterm . ' ctermbg=NONE guifg=' . s:base00.hex . ' guibg=NONE'
     endif
 
     let g:clap_fuzzy_match_hl_groups = s:fuzzy
 
+    let s:clap_file_style = 'ctermfg=' . s:palette.display.ctermbg . ' ctermbg=NONE guifg=' . s:palette.display.guifg . ' guibg=NONE'
     execute 'highlight clear ClapFile'
     execute 'highlight ClapFile ' . s:clap_file_style
+
+    let s:clap_vista_bracket = 'guibg=' . s:palette.display.guibg . ' ctermbg=' . s:palette.display.ctermbg
+    execute 'highlight ClapVistaBracket ' . s:clap_vista_bracket
 
     let g:clap#themes#solarized#palette = s:palette
 endfunction
