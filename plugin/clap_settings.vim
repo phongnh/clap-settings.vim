@@ -80,7 +80,7 @@ if executable('rg')
     endif
 endif
 
-function! s:ClapFindProjectDir(starting_path) abort
+function! s:FindProjectDir(starting_path) abort
     if empty(a:starting_dir)
         return ''
     endif
@@ -114,7 +114,7 @@ function! s:ClapFindProjectDir(starting_path) abort
     return fnamemodify(l:root_dir, ':p:~')
 endfunction
 
-command! -bang ClapRoot execute (<bang>0 ? 'ClapFiles!' : 'ClapFiles') s:ClapFindProjectDir(expand('%:p:h'))
+command! -bang ClapRoot execute (<bang>0 ? 'ClapFiles!' : 'ClapFiles') s:FindProjectDir(expand('%:p:h'))
 
 let s:clap_available_commands = filter(['rg', 'fd'], 'executable(v:val)')
 
