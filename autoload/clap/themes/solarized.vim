@@ -99,20 +99,15 @@ function! clap#themes#solarized#init() abort
         endif
 
         let s:fuzzy = [
-                    \   [s:base03.xterm, s:base3.hex],
-                    \   [s:base02.xterm, s:base2.hex],
                     \   [s:base01.xterm, s:base1.hex],
-                    \   [s:base00.xterm, s:base0.hex],
-                    \   [s:base0.xterm, s:base00.hex],
-                    \   [s:base1.xterm, s:base01.hex],
                     \ ]
     else
         let s:palette = {
                     \ 'display': {
                     \   'guifg':   s:base00.hex,
-                    \   'ctermbg': s:base00.xterm,
+                    \   'ctermfg': s:base00.xterm,
                     \   'guibg':   s:base3.hex,
-                    \   'ctermfg': s:base3.xterm,
+                    \   'ctermbg': s:base3.xterm,
                     \ },
                     \ 'input': {
                     \   'guibg':   s:base3.hex,
@@ -188,23 +183,42 @@ function! clap#themes#solarized#init() abort
         endif
 
         let s:fuzzy = [
-                    \   [s:base03.xterm, s:base03.hex],
-                    \   [s:base02.xterm, s:base02.hex],
                     \   [s:base01.xterm, s:base01.hex],
-                    \   [s:base00.xterm, s:base00.hex],
-                    \   [s:base0.xterm, s:base0.hex],
-                    \   [s:base1.xterm, s:base1.hex],
                     \ ]
     endif
 
-    let g:clap_fuzzy_match_hl_groups = s:fuzzy
+    call clap#highlight#clear()
 
-    let s:clap_file_style = 'ctermfg=' . s:palette.display.ctermbg . ' ctermbg=NONE guifg=' . s:palette.display.guifg . ' guibg=NONE'
+    let l:index = 0
+    for [l:ctermfg, l:guifg] in s:fuzzy
+        let l:index += 1
+        let l:group = 'ClapFuzzyMatches' . l:index
+        execute 'highlight clear ' . l:group
+        execute printf(
+                    \ 'highlight %s ctermfg=%s guifg=%s ctermbg=%s guibg=%s gui=bold cterm=bold',
+                    \ l:group,
+                    \ l:ctermfg,
+                    \ l:guifg,
+                    \ 'NONE',
+                    \ 'NONE'
+                    \ )
+    endfor
+
+    let g:clap_fuzzy_match_hl_groups        = s:fuzzy
+    let g:__clap_fuzzy_matches_hl_group_cnt = len(g:clap_fuzzy_match_hl_groups)
+    let g:__clap_fuzzy_last_hl_group        = 'ClapFuzzyMatches' . g:__clap_fuzzy_matches_hl_group_cnt
+
     execute 'highlight clear ClapFile'
-    execute 'highlight ClapFile ' . s:clap_file_style
-
-    let s:clap_vista_bracket = 'guibg=' . s:palette.display.guibg . ' ctermbg=' . s:palette.display.ctermbg
-    execute 'highlight ClapVistaBracket ' . s:clap_vista_bracket
+    execute printf(
+        \ 'highlight ClapFile ctermfg=%s ctermbg=NONE guifg=%s guibg=NONE',
+        \ s:palette.display.ctermfg,
+        \ s:palette.display.guifg
+        \ )
+    execute printf(
+                \ 'highlight ClapVistaBracket ctermbg=%s guibg=%s',
+                \ s:palette.display.ctermbg,
+                \ s:palette.display.guibg
+                \ )
 
     let g:clap#themes#solarized#palette = s:palette
 endfunction
