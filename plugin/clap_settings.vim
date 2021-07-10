@@ -75,6 +75,11 @@ let g:ClapPrompt = function('ClapPromptFormat')
 if executable('rg')
     let g:clap_provider_grep_executable = 'rg'
     let g:clap_provider_grep_opts = '-H --no-heading --line-number --column --hidden --smart-case'
+
+    if get(g:, 'clap_follow_links', 0)
+        let g:clap_provider_grep_opts .= ' --follow'
+    endif
+
     if get(g:, 'clap_grep_ignore_vcs', 0)
         let g:clap_provider_grep_opts .= ' --no-ignore-vcs'
     endif
