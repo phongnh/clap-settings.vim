@@ -12,6 +12,8 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:cur_tab_only = get(g:, 'clap_provider_buflist_cur_tab_only', v:false)
+let s:path_shorten = get(g:, 'clap_provider_buflist_path_shorten', v:true)
+let s:path_max_length = get(g:, 'clap_provider_buflist_path_max_length', 45)
 let s:path_separator = has('win32') ? '\' : '/'
 
 function! s:padding(origin, target_width) abort
@@ -31,6 +33,14 @@ function! s:modified_status(b) abort
   endif
 endfunction
 
+function! s:shorten_dir(dir) abort
+  let l:dir = a:dir
+  if s:path_shorten && strlen(l:dir) >= s:path_max_length
+    let l:dir = pathshorten(fnamemodify(l:dir, ':h')) . s:path_separator . fnamemodify(l:dir, ':t')
+  endif
+  return l:dir
+endfunction
+
 function! s:format_buffer(b, maxlen) abort
   let name = bufname(a:b)
   let name = empty(name) ? '[No Name]' : fnamemodify(name, ':p:~:.')
@@ -45,7 +55,8 @@ function! s:format_buffer(b, maxlen) abort
   let line = substitute(line, 'line ', ':', '')
   " let line = (line ==# 'line 1' ? '' : substitute(line, 'line ', ':', ''))
 
-  let dir = fnamemodify(name, ':h') . s:path_separator
+  let dir = s:shorten_dir(fnamemodify(name, ':h'))
+  let dir .= s:path_separator
   let name = fnamemodify(name, ':t') . line
   let name = s:padding(name, a:maxlen + 5)
   let extra = s:padding(extra, 6)
