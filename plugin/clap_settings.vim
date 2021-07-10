@@ -23,7 +23,14 @@ if get(g:, 'clap_solarized_theme', 0)
     augroup END
 endif
 
-let g:clap_layout                   = { 'relative': 'editor', 'width': '70%', 'height': '30%',  'row': '15%', 'col': '15%' }
+if get(g:, 'clap_enable_preview', 1)
+    let g:clap_layout       = { 'relative': 'editor', 'width': '70%', 'height': '30%',  'row': '15%', 'col': '15%' }
+    let g:clap_open_preview = 'always'
+    let g:clap_preview_size = 3
+else
+    let g:clap_layout       = { 'relative': 'editor', 'width': '70%', 'height': '35%',  'row': '25%', 'col': '15%' }
+    let g:clap_open_preview = 'never'
+endif
 let g:clap_popup_cursor_shape       = ''
 let g:clap_preview_direction        = 'UD'
 let g:clap_search_box_border_style  = 'nil'
