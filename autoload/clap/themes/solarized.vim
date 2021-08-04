@@ -187,7 +187,9 @@ function! clap#themes#solarized#init() abort
                     \ ]
     endif
 
-    call clap#highlight#clear()
+    if exists('g:clap')
+        call clap#highlight#clear()
+    endif
 
     let l:index = 0
     for [l:ctermfg, l:guifg] in s:fuzzy
