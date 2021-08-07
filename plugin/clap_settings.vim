@@ -81,7 +81,7 @@ let g:ClapPrompt = function('ClapPromptFormat')
 
 if executable('rg')
     let g:clap_provider_grep_executable = 'rg'
-    let g:clap_provider_grep_opts = '--max-columns=150 -H --no-heading --vimgrep --smart-case --hidden'
+    let g:clap_provider_grep_opts = '-H --no-heading --line-number --smart-case --hidden'
 
     if get(g:, 'clap_follow_links', 0)
         let g:clap_provider_grep_opts .= ' --follow'
