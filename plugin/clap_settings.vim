@@ -19,7 +19,7 @@ if get(g:, 'clap_solarized_theme', 0)
 
     augroup VimClapSolarizedTheme
         autocmd!
-        autocmd Colorscheme * call <SID>ReloadSolarizedTheme()
+        autocmd Colorscheme solarized* call <SID>ReloadSolarizedTheme()
     augroup END
 endif
 
