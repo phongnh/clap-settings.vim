@@ -128,7 +128,7 @@ endfunction
 
 command! -bang ClapRoot execute (<bang>0 ? 'ClapFiles!' : 'ClapFiles') s:FindProjectDir(expand('%:p:h'))
 
-let s:clap_available_commands = filter(['rg', 'fd'], 'executable(v:val)')
+let s:clap_available_commands = filter(['fd', 'rg'], 'executable(v:val)')
 
 if empty(s:clap_available_commands)
     command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache', <bang>0 ? 'Clap!' : 'Clap') <q-args>
@@ -136,20 +136,20 @@ if empty(s:clap_available_commands)
     finish
 endif
 
-let g:clap_find_tool    = get(g:, 'clap_find_tool', 'rg')
+let g:clap_find_tool    = get(g:, 'clap_find_tool', 'fd')
 let g:clap_follow_links = get(g:, 'clap_follow_links', 0)
 let s:clap_follow_links = g:clap_follow_links
 let g:clap_no_ignores   = get(g:, 'clap_no_ignores', 0)
 let s:clap_no_ignores   = g:clap_no_ignores
 
 let s:clap_find_commands = {
-            \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent --hidden',
             \ 'fd': 'fd --type file --color never --no-ignore-vcs --hidden',
+            \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent --hidden',
             \ }
 
 let s:clap_find_all_commands = {
-            \ 'rg': 'rg --files --color never --no-ignore --hidden',
             \ 'fd': 'fd --type file --color never --no-ignore --hidden',
+            \ 'rg': 'rg --files --color never --no-ignore --hidden',
             \ }
 
 function! s:BuildFindCommand() abort
