@@ -48,7 +48,8 @@ let g:clap_file_root_markers = [
             \ 'mix.exs',
             \ 'Cargo.toml',
             \ 'shard.yml',
-            \ 'go.mod'
+            \ 'go.mod',
+            \ '.root',
             \ ]
 
 let g:clap_root_markers = ['.git', '.hg', '.svn', '.bzr', '_darcs'] + g:clap_file_root_markers
