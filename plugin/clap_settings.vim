@@ -7,22 +7,6 @@ if exists('g:loaded_clap_settings_vim')
     finish
 endif
 
-if get(g:, 'clap_solarized_theme', 0)
-    let g:clap_theme = 'solarized'
-
-    call clap#themes#solarized#init()
-
-    function! s:ReloadSolarizedTheme() abort
-        call clap#themes#solarized#init()
-        call clap#themes#init()
-    endfunction
-
-    augroup VimClapSolarizedTheme
-        autocmd!
-        autocmd Colorscheme solarized* call <SID>ReloadSolarizedTheme()
-    augroup END
-endif
-
 if get(g:, 'clap_enable_preview', 1)
     let g:clap_layout       = { 'relative': 'editor', 'width': '70%', 'height': '30%', 'row': '15%', 'col': '15%' }
     let g:clap_open_preview = 'always'
@@ -42,39 +26,8 @@ let g:clap_prompt_format            = ' %spinner%%forerunner_status%%provider_id
 let g:clap_insert_mode_only   = v:true
 let g:clap_disable_run_rooter = v:true
 
-function! ClapPromptFormat() abort
-    if g:clap.provider.id ==# 'files' && exists('g:__clap_provider_cwd')
-        let cwd = fnamemodify(g:__clap_provider_cwd, ':~:.')
-        if cwd[0] ==# '~' || cwd[0] ==# '/'
-            let cwd = pathshorten(cwd)
-        endif
-        return g:clap_prompt_format . cwd . ' '
-    endif
-    return g:clap_prompt_format . ' '
-endfunction
-
-let g:ClapPrompt = function('ClapPromptFormat')
-
-if executable('rg')
-    let g:clap_provider_grep_executable = 'rg'
-    let g:clap_provider_grep_opts = '-H --no-heading --line-number --smart-case --hidden'
-
-    if get(g:, 'clap_follow_links', 0)
-        let g:clap_provider_grep_opts .= ' --follow'
-    endif
-
-    if get(g:, 'clap_grep_ignore_vcs', 0)
-        let g:clap_provider_grep_opts .= ' --no-ignore-vcs'
-    endif
-endif
-
-let s:clap_available_commands = filter(['fd', 'rg'], 'executable(v:val)')
-
-if empty(s:clap_available_commands)
-    command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache', <bang>0 ? 'Clap!' : 'Clap') <q-args>
-    command! -bang -nargs=? -complete=dir ClapFilesAll ClapFiles<bang> <args>
-    finish
-endif
+let g:ClapPrompt                      = function('clap_settings#prompt_format')
+let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru_filter')
 
 let g:clap_find_tool    = get(g:, 'clap_find_tool', 'fd')
 let g:clap_follow_links = get(g:, 'clap_follow_links', 0)
@@ -82,112 +35,79 @@ let s:clap_follow_links = g:clap_follow_links
 let g:clap_no_ignores   = get(g:, 'clap_no_ignores', 0)
 let s:clap_no_ignores   = g:clap_no_ignores
 
-let s:clap_find_commands = {
-            \ 'fd': 'fd --type file --color never --no-ignore-vcs --hidden',
-            \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent --hidden',
-            \ }
+function! s:build_find_command() abort
+    let find_commands = {
+                \ 'fd': 'fd --type file --color never --no-ignore-vcs --hidden --strip-cwd-prefix',
+                \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent --hidden',
+                \ }
 
-let s:clap_find_all_commands = {
-            \ 'fd': 'fd --type file --color never --no-ignore --hidden',
-            \ 'rg': 'rg --files --color never --no-ignore --hidden',
-            \ }
-
-function! s:BuildFindCommand() abort
-    let l:cmd = s:clap_find_commands[s:clap_current_command]
-    if s:clap_no_ignores
-        let l:cmd = s:clap_find_all_commands[s:clap_current_command]
+    if g:clap_follow_links
+        call map(find_commands, 'v:val . " --follow"')
     endif
-    if s:clap_follow_links == 1
-        let l:cmd .= ' --follow'
-    endif
-    return l:cmd
-endfunction
 
-function! s:DetectClapCurrentCommand() abort
-    let idx = index(s:clap_available_commands, g:clap_find_tool)
-    let s:clap_current_command = get(s:clap_available_commands, idx > -1 ? idx : 0)
-endfunction
-
-function! s:BuildClapFinder() abort
-    let s:clap_finder = s:BuildFindCommand()
-endfunction
-
-function! s:PrintClapCurrentCommandInfo() abort
-    echo 'Clap is using command `' . s:clap_finder . '`!'
-endfunction
-
-command! PrintClapCurrentCommandInfo call <SID>PrintClapCurrentCommandInfo()
-
-function! s:ChangeClapFinder(bang, command) abort
-    " Reset to default command
-    if a:bang
-        call s:DetectClapCurrentCommand()
-    elseif strlen(a:command)
-        if index(s:clap_available_commands, a:command) == -1
-            return
-        endif
-        let s:clap_current_command = a:command
+    if g:clap_find_tool ==# 'rg' && executable('rg')
+        let g:clap_find_command = find_commands['rg']
     else
-        let idx = index(s:clap_available_commands, s:clap_current_command)
-        let s:clap_current_command = get(s:clap_available_commands, idx + 1, s:clap_available_commands[0])
+        let g:clap_find_tool = 'fd'
+        let g:clap_find_command = find_commands['fd']
     endif
-    call s:BuildClapFinder()
-    call s:PrintClapCurrentCommandInfo()
+
+    return g:clap_find_command
 endfunction
 
-function! s:ListClapAvailableCommands(...) abort
-    return s:clap_available_commands
+function! s:build_find_all_command() abort
+    let find_all_commands = {
+                \ 'fd': 'fd --type file --color never --no-ignore --hidden --follow --strip-cwd-prefix',
+                \ 'rg': 'rg --files --color never --no-ignore --hidden --follow',
+                \ }
+
+    if g:clap_find_tool ==# 'rg' && executable('rg')
+        let g:clap_find_all_command = find_all_commands['rg']
+    else
+        let g:clap_find_tool = 'fd'
+        let g:clap_find_all_command = find_all_commands['fd']
+    endif
+
+    return g:clap_find_all_command
 endfunction
 
-command! -nargs=? -bang -complete=customlist,<SID>ListClapAvailableCommands ChangeClapFinder call <SID>ChangeClapFinder(<bang>0, <q-args>)
+function! s:build_grep_command() abort
+    let g:clap_provider_grep_executable = 'rg'
+    let g:clap_provider_grep_opts = '--color=never -H --no-heading --line-number --smart-case --hidden'
+    let g:clap_provider_grep_opts .= g:clap_follow_links ? ' --follow' : ''
+    let g:clap_provider_grep_opts .= g:clap_grep_ignore_vcs ? ' --no-ignore-vcs' : ''
+    let g:clap_provider_live_grep_opts = g:clap_provider_grep_opts
+endfunction
 
-function! s:ToggleClapFollowLinks() abort
-    if s:clap_follow_links == 0
-        let s:clap_follow_links = 1
+function! s:toggle_clap_follow_links() abort
+    if g:clap_follow_links == 0
+        let g:clap_follow_links = 1
         echo 'Clap follows symlinks!'
     else
-        let s:clap_follow_links = 0
+        let g:clap_follow_links = 0
         echo 'Clap does not follow symlinks!'
     endif
-    call s:BuildClapFinder()
+    call s:build_find_command()
 endfunction
+
+command! -bang -nargs=? -complete=dir ClapFiles    call clap_settings#files(<q-args>, <bang>0)
+command! -bang -nargs=? -complete=dir ClapFilesAll call clap_settings#files_all(<q-args>, <bang>0)
 
 command! ToggleClapFollowLinks call <SID>ToggleClapFollowLinks()
 
-function! s:ToggleClapNoIgnores() abort
-    if s:clap_no_ignores == 0
-        let s:clap_no_ignores = 1
-        echo 'Clap does not respect ignores!'
-    else
-        let s:clap_no_ignores = 0
-        echo 'Clap respects ignores!'
-    endif
-    call s:BuildClapFinder()
+function! s:setup_clap_settings() abort
+    call s:build_find_all_command()
+    call s:build_find_command()
+    call s:build_grep_command()
 endfunction
 
-command! ToggleClapNoIgnores call <SID>ToggleClapNoIgnores()
+command! -nargs=1 -complete=custom,clap_settings#list_themes ClapSetTheme call clap_settings#set_theme(<q-args>)
 
-function! s:ClapFilesAll(dir, bang) abort
-    let current = s:clap_no_ignores
-    try
-        let s:clap_no_ignores = 1
-        call s:BuildClapFinder()
-        if a:bang
-            execute 'ClapFiles!' a:dir
-        else
-            execute 'ClapFiles' a:dir
-        endif
-    finally
-        let s:clap_no_ignores = current
-        call s:BuildClapFinder()
-    endtry
-endfunction
-
-command! -bang -nargs=? -complete=dir ClapFilesAll call <SID>ClapFilesAll(<q-args>, <bang>0)
-
-command! -bang -nargs=? -complete=dir ClapFiles execute printf('%s files +no-cache ++finder=%s', <bang>0 ? 'Clap!' : 'Clap', s:clap_finder) <q-args>
-
-call s:DetectClapCurrentCommand()
-call s:BuildClapFinder()
+augroup ClapSettings
+    autocmd!
+    autocmd VimEnter * call <SID>setup_clap_settings()
+    autocmd VimEnter * call clap_settings#find_themes() | call clap_settings#reload_theme()
+    autocmd ColorScheme * call clap_settings#reload_theme()
+augroup END
 
 let g:loaded_clap_settings_vim = 1

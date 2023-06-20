@@ -224,3 +224,5 @@ function! clap#themes#solarized#init() abort
 
     let g:clap#themes#solarized#palette = s:palette
 endfunction
+
+call clap#themes#solarized#init()
