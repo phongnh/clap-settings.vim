@@ -93,7 +93,7 @@ endfunction
 command! -bang -nargs=? -complete=dir ClapFiles    call clap_settings#files(<q-args>, <bang>0)
 command! -bang -nargs=? -complete=dir ClapFilesAll call clap_settings#files_all(<q-args>, <bang>0)
 
-command! ToggleClapFollowLinks call <SID>ToggleClapFollowLinks()
+command! ToggleClapFollowLinks call <SID>toggle_clap_follow_links()
 
 function! s:setup_clap_settings() abort
     call s:build_find_all_command()
