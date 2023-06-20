@@ -7,16 +7,17 @@ if exists('g:loaded_clap_settings_vim')
     finish
 endif
 
-if get(g:, 'clap_enable_preview', 1)
-    let g:clap_layout       = { 'relative': 'editor', 'width': '70%', 'height': '30%', 'row': '15%', 'col': '15%' }
-    let g:clap_open_preview = 'always'
-    let g:clap_preview_size = 3
+let g:clap_open_preview = get(g:, 'clap_open_preview', 'always')
+
+if g:clap_open_preview ==# 'never'
+    let g:clap_layout = { 'relative': 'editor', 'width': '70%', 'height': '35%', 'row': '25%', 'col': '15%' }
 else
-    let g:clap_layout       = { 'relative': 'editor', 'width': '70%', 'height': '35%', 'row': '25%', 'col': '15%' }
-    let g:clap_open_preview = 'never'
+    let g:clap_layout = { 'relative': 'editor', 'width': '70%', 'height': '30%', 'row': '15%', 'col': '15%' }
+    let g:clap_preview_size = 3
+    let g:clap_preview_direction = 'UD'
 endif
+
 let g:clap_popup_cursor_shape       = ''
-let g:clap_preview_direction        = 'UD'
 let g:clap_search_box_border_style  = 'nil'
 let g:clap_enable_background_shadow = v:false
 let g:clap_current_selection_sign   = { 'text': '» ', 'texthl': 'ClapCurrentSelectionSign', 'linehl': 'ClapCurrentSelection' }
