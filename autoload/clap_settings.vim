@@ -22,25 +22,37 @@ function! clap_settings#reinit_theme() abort
     call clap#themes#init()
 endfunction
 
+function! clap_settings#default_theme(...) abort
+    if &background == 'dark'
+        return get(a:, 1, 'onehalfdark')
+    else
+        return get(a:, 2, 'onehalflight')
+    endif
+endfunction
+
 function! clap_settings#set_theme(theme) abort
-    if index(s:clap_external_themes, a:theme) > -1
+    let l:theme = a:theme
+
+    if index(s:clap_external_themes, l:theme) > -1
         unlet! g:clap_theme
         call clap_settings#reinit_theme()
         return
     endif
 
-    if index(s:clap_themes, a:theme) < 0
-        return
+    if index(s:clap_themes, l:theme) < 0
+        let l:theme = clap_settings#default_theme()
     endif
 
+    " echomsg 'l:theme:' l:theme
+
     " Reload theme palette
-    let l:theme_path = findfile(printf('autoload/clap/themes/%s.vim', a:theme), &rtp)
+    let l:theme_path = findfile(printf('autoload/clap/themes/%s.vim', l:theme), &rtp)
     if !empty(l:theme_path) && filereadable(l:theme_path)
         " echomsg 'source ' . l:theme_path
         execute 'source ' . l:theme_path
     endif
 
-    let g:clap_theme = a:theme
+    let g:clap_theme = l:theme
     call clap_settings#reinit_theme()
 endfunction
 
@@ -57,7 +69,11 @@ function! clap_settings#build_theme() abort
     let l:theme = l:original_theme
 
     if l:theme ==# 'gruvbox' || l:theme =~ 'gruvbox8'
-        let l:theme = 'onehalfdark'
+        let l:theme = clap_settings#default_theme('onehalfdark', 'onehalflight')
+    endif
+
+    if l:theme ==# 'atom'
+        let l:theme = 'atom_dark'
     endif
 
     if index(s:clap_themes, l:theme) < 0
@@ -79,9 +95,57 @@ function! clap_settings#build_theme() abort
     return l:theme
 endfunction
 
+function! clap_settings#extract(group, what, gui_or_cterm) abort
+    return synIDattr(synIDtrans(hlID(a:group)), a:what, a:gui_or_cterm)
+endfunction
+
+function! clap_settings#highlight_details(group) abort
+    let name = synIDattr(synIDtrans(hlID(a:group)), 'name')
+    let output = execute(printf('highlight %s', name))
+    let result = {}
+    for item in split(output, '\s\+')
+        if match(item, '=') > 0
+            let [attr, value] = split(item, '=')
+            let result[attr] = value
+        endif
+    endfor
+    return result
+endfunction
+
+function! clap_settings#link_highlight(to_group, from_group, ...) abort
+    let result = clap_settings#highlight_details(a:from_group)
+    let hl = []
+    for attr in a:000
+        let mappings = {}
+        if type(attr) == type('')
+            let mappings[attr] = attr
+        elseif type(attr) == type({})
+            call extend(mappings, attr)
+        endif
+        for [key, val] in items(mappings)
+            if has_key(result, val)
+                call add(hl, printf('%s=%s', key, result[val]))
+            endif
+        endfor
+    endfor
+    if len(hl)
+        execute 'highlight! ' . a:to_group . ' ' . join(hl, ' ')
+    endif
+endfunction
+
+function! clap_settings#apply_theme_patches(...) abort
+    highlight! link ClapIndicator ClapInput
+    let l:theme = get(a:, 1, '')
+    if l:theme == 'nord'
+        call clap_settings#link_highlight('ClapSpinner', 'ClapInput', 'ctermbg', 'guibg')
+    endif
+    " call clap_settings#link_highlight('ClapSymbol', 'ClapInput', 'ctermbg', 'guibg', { 'ctermfg': 'ctermbg', 'guifg': 'guibg' })
+endfunction
+
 function! clap_settings#reload_theme() abort
     let l:theme = clap_settings#build_theme()
     call clap_settings#set_theme(l:theme)
+    call clap_settings#apply_theme_patches(l:theme)
 endfunction
 
 function! clap_settings#prompt_format() abort
