@@ -188,7 +188,7 @@ function! clap#themes#solarized#init() abort
     endif
 
     if exists('g:clap')
-        call clap#highlight#clear()
+        call clap#highlighter#clear_display()
     endif
 
     let l:index = 0
