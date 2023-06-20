@@ -94,7 +94,9 @@ function! clap_settings#themes#get() abort
 endfunction
 
 function! clap_settings#themes#refresh() abort
-    call clap#highlighter#clear_display()
+    if exists('g:clap')
+        call clap#highlighter#clear_display()
+    endif
     call clap#themes#init()
 endfunction
 
