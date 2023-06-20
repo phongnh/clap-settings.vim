@@ -101,13 +101,13 @@ function! s:setup_clap_settings() abort
     call s:build_grep_command()
 endfunction
 
-command! -nargs=1 -complete=custom,clap_settings#list_themes ClapSetTheme call clap_settings#set_theme(<q-args>)
+command! -nargs=1 -complete=custom,clap_settings#themes#list ClapSetTheme call clap_settings#themes#set(<q-args>)
 
 augroup ClapSettings
     autocmd!
     autocmd VimEnter * call <SID>setup_clap_settings()
-    autocmd VimEnter * call clap_settings#find_themes() | call clap_settings#reload_theme()
-    autocmd ColorScheme * call clap_settings#reload_theme()
+    autocmd VimEnter * call clap_settings#themes#init()
+    autocmd ColorScheme * call clap_settings#themes#reload()
 augroup END
 
 let g:loaded_clap_settings_vim = 1
