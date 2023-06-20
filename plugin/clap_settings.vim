@@ -38,8 +38,8 @@ let s:clap_no_ignores   = g:clap_no_ignores
 
 function! s:build_find_command() abort
     let find_commands = {
-                \ 'fd': 'fd --type file --color never --no-ignore-vcs --hidden --strip-cwd-prefix',
-                \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent --hidden',
+                \ 'fd': 'fd --type file --color never --no-ignore-vcs -H --strip-cwd-prefix',
+                \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent -.',
                 \ }
 
     if g:clap_follow_links
@@ -58,8 +58,8 @@ endfunction
 
 function! s:build_find_all_command() abort
     let find_all_commands = {
-                \ 'fd': 'fd --type file --color never --no-ignore --hidden --follow --strip-cwd-prefix',
-                \ 'rg': 'rg --files --color never --no-ignore --hidden --follow',
+                \ 'fd': 'fd --type file --color never --no-ignore -H --follow --strip-cwd-prefix',
+                \ 'rg': 'rg --files --color never --no-ignore -. --follow',
                 \ }
 
     if g:clap_find_tool ==# 'rg' && executable('rg')
