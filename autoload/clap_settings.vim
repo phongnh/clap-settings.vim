@@ -10,11 +10,11 @@ function! clap_settings#prompt_format() abort
 endfunction
 
 function! clap_settings#files(dir, bang) abort
-    execute printf('%s files ++finder=%s %s', a:bang ? 'Clap!' : 'Clap', g:clap_find_command, empty(a:dir) ? '.' : a:dir)
+    execute printf('%s files --path=%s', a:bang ? 'Clap!' : 'Clap', empty(a:dir) ? '.' : a:dir)
 endfunction
 
 function! clap_settings#files_all(dir, bang) abort
-    execute printf('%s files ++finder=%s %s', a:bang ? 'Clap!' : 'Clap', g:clap_find_all_command, empty(a:dir) ? '.' : a:dir)
+    execute printf('%s files --path=%s', a:bang ? 'Clap!' : 'Clap', empty(a:dir) ? '.' : a:dir)
 endfunction
 
 let s:clap_mru_exclude = [
