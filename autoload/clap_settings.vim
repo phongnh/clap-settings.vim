@@ -10,11 +10,23 @@ function! clap_settings#prompt_format() abort
 endfunction
 
 function! clap_settings#files(dir, bang) abort
-    execute printf('%s files --path=%s', a:bang ? 'Clap!' : 'Clap', empty(a:dir) ? '.' : a:dir)
+    try
+        let l:cwd = getcwd()
+        execute 'lcd' empty(a:dir) ? '.' : a:dir
+        execute 'Clap! files' (a:bang ? '--name-only' : '')
+    finally
+        execute 'lcd' l:cwd
+    endtry
 endfunction
 
 function! clap_settings#files_all(dir, bang) abort
-    execute printf('%s files --path=%s', a:bang ? 'Clap!' : 'Clap', empty(a:dir) ? '.' : a:dir)
+    try
+        let l:cwd = getcwd()
+        execute 'lcd' empty(a:dir) ? '.' : a:dir
+        execute 'Clap! files' (a:bang ? '--name-only' : '')
+    finally
+        execute 'lcd' l:cwd
+    endtry
 endfunction
 
 let s:clap_mru_exclude = [
