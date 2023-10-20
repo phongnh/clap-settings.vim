@@ -30,11 +30,9 @@ let g:clap_disable_run_rooter = v:true
 let g:ClapPrompt                      = function('clap_settings#prompt_format')
 let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru_filter')
 
-let g:clap_find_tool    = get(g:, 'clap_find_tool', 'fd')
-let g:clap_follow_links = get(g:, 'clap_follow_links', 0)
-let s:clap_follow_links = g:clap_follow_links
-let g:clap_no_ignores   = get(g:, 'clap_no_ignores', 0)
-let s:clap_no_ignores   = g:clap_no_ignores
+let g:clap_find_tool       = get(g:, 'clap_find_tool', 'fd')
+let g:clap_follow_links    = get(g:, 'clap_follow_links', 0)
+let g:clap_grep_ignore_vcs = get(g:, 'clap_grep_ignore_vcs', 0)
 
 function! s:build_find_command() abort
     let find_commands = {
