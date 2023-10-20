@@ -30,45 +30,8 @@ let g:clap_disable_run_rooter = v:true
 let g:ClapPrompt                      = function('clap_settings#prompt_format')
 let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru_filter')
 
-let g:clap_find_tool       = get(g:, 'clap_find_tool', 'fd')
 let g:clap_follow_links    = get(g:, 'clap_follow_links', 0)
 let g:clap_grep_ignore_vcs = get(g:, 'clap_grep_ignore_vcs', 0)
-
-function! s:build_find_command() abort
-    let find_commands = {
-                \ 'fd': 'fd --type file --color never --no-ignore-vcs -H --strip-cwd-prefix',
-                \ 'rg': 'rg --files --color never --no-ignore-vcs --ignore-dot --ignore-parent -.',
-                \ }
-
-    if g:clap_follow_links
-        call map(find_commands, 'v:val . " --follow"')
-    endif
-
-    if g:clap_find_tool ==# 'rg' && executable('rg')
-        let g:clap_find_command = find_commands['rg']
-    else
-        let g:clap_find_tool = 'fd'
-        let g:clap_find_command = find_commands['fd']
-    endif
-
-    return g:clap_find_command
-endfunction
-
-function! s:build_find_all_command() abort
-    let find_all_commands = {
-                \ 'fd': 'fd --type file --color never --no-ignore -H --follow --strip-cwd-prefix',
-                \ 'rg': 'rg --files --color never --no-ignore -. --follow',
-                \ }
-
-    if g:clap_find_tool ==# 'rg' && executable('rg')
-        let g:clap_find_all_command = find_all_commands['rg']
-    else
-        let g:clap_find_tool = 'fd'
-        let g:clap_find_all_command = find_all_commands['fd']
-    endif
-
-    return g:clap_find_all_command
-endfunction
 
 function! s:build_grep_command() abort
     let g:clap_provider_grep_executable = 'rg'
@@ -78,25 +41,10 @@ function! s:build_grep_command() abort
     let g:clap_provider_live_grep_opts = g:clap_provider_grep_opts
 endfunction
 
-function! s:toggle_clap_follow_links() abort
-    if g:clap_follow_links == 0
-        let g:clap_follow_links = 1
-        echo 'Clap follows symlinks!'
-    else
-        let g:clap_follow_links = 0
-        echo 'Clap does not follow symlinks!'
-    endif
-    call s:build_find_command()
-endfunction
-
 command! -bang -nargs=? -complete=dir ClapFiles         call clap_settings#files(<q-args>, <bang>0)
 command! -bang -nargs=? -complete=dir ClapFilesAll      call clap_settings#files_all(<q-args>, <bang>0)
 
-command! ToggleClapFollowLinks call <SID>toggle_clap_follow_links()
-
 function! s:setup_clap_settings() abort
-    call s:build_find_all_command()
-    call s:build_find_command()
     call s:build_grep_command()
     call clap_settings#themes#init()
 endfunction
