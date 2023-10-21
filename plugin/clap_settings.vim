@@ -52,6 +52,7 @@ augroup ClapSettings
     autocmd!
     autocmd VimEnter * call <SID>setup_clap_settings()
     autocmd ColorScheme * call clap_settings#themes#reload()
+    autocmd FileType clap_input let [b:autopairs_enabled, b:lexima_disabled] = [0, 1]
 augroup END
 
 let g:loaded_clap_settings_vim = 1
