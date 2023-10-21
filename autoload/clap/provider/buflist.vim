@@ -42,23 +42,22 @@ function! s:shorten_dir(dir) abort
 endfunction
 
 function! s:format_buffer(b, maxlen) abort
-  let name = bufname(a:b)
-  let name = empty(name) ? '[No Name]' : fnamemodify(name, ':p:~:.')
+  let buffer_name = bufname(a:b)
+  let fullpath = empty(buffer_name) ? '[No Name]' : fnamemodify(buffer_name, ':p:~:.')
+  let filename = empty(fullpath) ? '[No Name]' : fnamemodify(fullpath, ':t')
   let flag = a:b == bufnr('')  ? '%' : (a:b == bufnr('#') ? '#' : ' ')
   let modified = s:modified_status(a:b)
   let readonly = getbufvar(a:b, '&readonly') ? ' ' : ''
 
   let bp = s:padding('['.a:b.']', 5)
-  let icon = g:clap_enable_icon ? s:padding(clap#icon#for(name), 3) : ''
+  let icon = g:clap_enable_icon ? s:padding(clap#icon#for(fullpath), 3) : ''
   let extra = join(filter([modified, readonly], '!empty(v:val)'), '')
   let line = get(s:line_info, a:b, '')
   let line = substitute(line, 'line ', ':', '')
   " let line = (line ==# 'line 1' ? '' : substitute(line, 'line ', ':', ''))
 
-  let dir = s:shorten_dir(fnamemodify(name, ':h'))
-  let dir .= s:path_separator
-  let name = fnamemodify(name, ':t') . line
-  let name = s:padding(name, a:maxlen + 5)
+  let dir = s:shorten_dir(fnamemodify(fullpath, ':h')) . s:path_separator
+  let name = s:padding(filename . line, a:maxlen + 5)
   let extra = s:padding(extra, 6)
   let flag = s:padding(flag, 3)
 
@@ -116,7 +115,7 @@ function! s:action_delete() abort
   let current_matches = g:clap.display.line_count()
   execute 'bdelete' s:current_bufnr
   call g:clap.display.deletecurline()
-  call clap#indicator#update_matches_on_deletecurline()
+  call clap#indicator#update_on_deletecurline()
   call g:clap.preview.hide()
   call g:clap#display_win.shrink_if_undersize()
 endfunction
@@ -130,6 +129,7 @@ let s:buffers = {}
 let s:buffers.sink = function('s:buffers_sink')
 let s:buffers.source = function('s:buffers')
 let s:buffers.on_move = function('s:buffers_on_move')
+let s:buffers.on_move_async = { -> clap#client#notify_provider('on_move') }
 let s:buffers.syntax = 'clap_buflist'
 let s:buffers.support_open_action = v:true
 let s:buffers.action = {
