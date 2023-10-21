@@ -4,7 +4,7 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let history = {}
+let s:history = {}
 
 function! s:raw_history() abort
     let history = uniq(
@@ -29,15 +29,15 @@ function! s:history_sink(selected) abort
     call clap#sink#edit_with_open_action(fpath)
 endfunction
 
-let history.icon = 'File'
-let history.syntax = 'clap_files'
-let history.sink = function('s:history_sink')
-let history.on_move = function('clap#provider#files#on_move_impl')
-let history.on_move_async = function('clap#impl#on_move#async')
-let history.source = function('s:raw_history')
-let history.support_open_action = v:true
+let s:history.icon = 'File'
+let s:history.syntax = 'clap_files'
+let s:history.sink = function('s:history_sink')
+let s:history.on_move = function('clap#provider#files#on_move_impl')
+let s:history.on_move_async = function('clap#impl#on_move#async')
+let s:history.source = function('s:raw_history')
+let s:history.support_open_action = v:true
 
-let g:clap#provider#mru_in_cwd# = history
+let g:clap#provider#mru_in_cwd# = s:history
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
