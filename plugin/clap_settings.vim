@@ -17,9 +17,7 @@ else
     let g:clap_preview_direction = 'UD'
 endif
 
-let g:clap_popup_cursor_shape       = ''
 let g:clap_search_box_border_style  = 'nil'
-let g:clap_enable_background_shadow = v:false
 let g:clap_current_selection_sign   = { 'text': '» ', 'texthl': 'ClapCurrentSelectionSign', 'linehl': 'ClapCurrentSelection' }
 let g:clap_selected_sign            = { 'text': ' »', 'texthl': 'ClapSelectedSign', 'linehl': 'ClapSelected' }
 let g:clap_prompt_format            = ' %spinner%%forerunner_status%%provider_id%:'
@@ -34,11 +32,10 @@ let g:clap_follow_links    = get(g:, 'clap_follow_links', 0)
 let g:clap_grep_ignore_vcs = get(g:, 'clap_grep_ignore_vcs', 0)
 
 function! s:build_grep_command() abort
-    let g:clap_provider_grep_executable = 'rg'
-    let g:clap_provider_grep_opts = '--color=never -H --no-heading --line-number --smart-case --hidden'
-    let g:clap_provider_grep_opts .= g:clap_follow_links ? ' --follow' : ''
-    let g:clap_provider_grep_opts .= g:clap_grep_ignore_vcs ? ' --no-ignore-vcs' : ''
-    let g:clap_provider_live_grep_opts = g:clap_provider_grep_opts
+    let g:clap_provider_live_grep_executable = 'rg'
+    let g:clap_provider_live_grep_opts = '--color=never -H --no-heading --line-number --smart-case --hidden'
+    let g:clap_provider_live_grep_opts .= g:clap_follow_links ? ' --follow' : ''
+    let g:clap_provider_live_grep_opts .= g:clap_grep_ignore_vcs ? ' --no-ignore-vcs' : ''
 endfunction
 
 command! -bang -nargs=? -complete=dir ClapFiles         call clap_settings#files(<q-args>, <bang>0)
