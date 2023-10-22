@@ -38,8 +38,21 @@ function! s:build_grep_command() abort
     let g:clap_provider_live_grep_opts .= g:clap_grep_ignore_vcs ? ' --no-ignore-vcs' : ''
 endfunction
 
+function! s:toggle_clap_live_grep_follow_links() abort
+    if g:clap_follow_links == 0
+        let g:clap_follow_links = 1
+        echo 'Clap live_grep follows symlinks!'
+    else
+        let g:clap_follow_links = 0
+        echo 'Clap live_grep does not follow symlinks!'
+    endif
+    call s:build_grep_command()
+endfunction
+
 command! -bang -nargs=? -complete=dir ClapFiles         call clap_settings#files(<q-args>, <bang>0)
 command! -bang -nargs=? -complete=dir ClapFilesAll      call clap_settings#files_all(<q-args>, <bang>0)
+
+command! ToggleClapLiveGrepFollowLinks call <SID>toggle_clap_live_grep_follow_links()
 
 function! s:setup_clap_settings() abort
     call s:build_grep_command()
