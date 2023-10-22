@@ -1,3 +1,6 @@
+let s:save_cpo = &cpoptions
+set cpoptions&vim
+
 " Copy this definition style from https://github.com/liuchengxu/vim-clap
 " Use definition to easily modify palette
 let s:base03  = { 'hex': '#002b36', 'xterm': '234', 'xterm_hex': '#1c1c1c' }
@@ -209,3 +212,6 @@ function! clap#themes#solarized#init() abort
 endfunction
 
 call clap#themes#solarized#init()
+
+let &cpoptions = s:save_cpo
+unlet s:save_cpo

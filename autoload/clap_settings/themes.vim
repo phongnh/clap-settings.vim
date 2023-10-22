@@ -56,7 +56,7 @@ endfunction
 
 function! clap_settings#themes#get() abort
     let l:original_theme = get(g:, 'colors_name', '')
-    if has('vim_starting') && exists('g:clap_theme')
+    if exists('g:clap_theme')
         let l:original_theme = g:clap_theme
     endif
 
