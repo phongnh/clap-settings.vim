@@ -57,9 +57,10 @@ command! ToggleClapLiveGrepFollowLinks call <SID>toggle_clap_live_grep_follow_li
 function! s:setup_clap_settings() abort
     call s:build_grep_command()
     call clap_settings#themes#init()
+    call clap_settings#themes#reload()
 endfunction
 
-command! -nargs=1 -complete=custom,clap_settings#themes#list ClapSetTheme call clap_settings#themes#set(<q-args>)
+command! -nargs=1 -complete=custom,clap_settings#themes#list ClapThemeSet call clap_settings#themes#set(<q-args>)
 
 augroup ClapSettings
     autocmd!

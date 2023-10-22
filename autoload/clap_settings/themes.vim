@@ -8,7 +8,7 @@ let s:clap_external_themes = [
             \ 'sonokai',
             \ ]
 
-function! clap_settings#themes#default_theme(...) abort
+function! s:default_theme(...) abort
     if &background == 'dark'
         return get(a:, 1, 'onehalfdark')
     else
@@ -16,11 +16,11 @@ function! clap_settings#themes#default_theme(...) abort
     endif
 endfunction
 
-function! clap_settings#themes#extract(group, what, gui_or_cterm) abort
+function! s:extract(group, what, gui_or_cterm) abort
     return synIDattr(synIDtrans(hlID(a:group)), a:what, a:gui_or_cterm)
 endfunction
 
-function! clap_settings#themes#highlight_details(group) abort
+function! s:highlight_details(group) abort
     let name = synIDattr(synIDtrans(hlID(a:group)), 'name')
     let output = execute(printf('highlight %s', name))
     let result = {}
@@ -33,8 +33,8 @@ function! clap_settings#themes#highlight_details(group) abort
     return result
 endfunction
 
-function! clap_settings#themes#link_highlight(to_group, from_group, ...) abort
-    let result = clap_settings#themes#highlight_details(a:from_group)
+function! s:link_highlight(to_group, from_group, ...) abort
+    let result = s:highlight_details(a:from_group)
     let hl = []
     for attr in a:000
         let mappings = {}
@@ -54,6 +54,44 @@ function! clap_settings#themes#link_highlight(to_group, from_group, ...) abort
     endif
 endfunction
 
+function! s:clear_highlight_groups() abort
+    let l:highlight_groups = [
+                \ 'ClapFile',
+                \ 'ClapSpinner',
+                \ 'ClapSearchText',
+                \ 'ClapInput',
+                \ 'ClapDisplay',
+                \ 'ClapIndicator',
+                \ 'ClapSelected',
+                \ 'ClapCurrentSelection',
+                \ 'ClapSelectedSign',
+                \ 'ClapCurrentSelectionSign',
+                \ 'ClapPreview',
+                \ ]
+    for l:group in l:highlight_groups
+        if hlexists(l:group)
+            execute 'highlight clear' l:group
+        endif
+    endfor
+endfunction
+
+function! s:refresh() abort
+    call s:clear_highlight_groups()
+    if exists('g:clap')
+        call clap#highlighter#clear_display()
+    endif
+    call clap#themes#init()
+endfunction
+
+function! s:apply_patches(...) abort
+    highlight! link ClapIndicator ClapInput
+    let l:theme = get(a:, 1, '')
+    if l:theme == 'nord'
+        call s:link_highlight('ClapSpinner', 'ClapInput', 'ctermbg', 'guibg')
+    endif
+    " call s:link_highlight('ClapSymbol', 'ClapInput', 'ctermbg', 'guibg', { 'ctermfg': 'ctermbg', 'guifg': 'guibg' })
+endfunction
+
 function! clap_settings#themes#get() abort
     let l:original_theme = get(g:, 'colors_name', '')
     if exists('g:clap_theme')
@@ -67,7 +105,7 @@ function! clap_settings#themes#get() abort
     let l:theme = l:original_theme
 
     if l:theme ==# 'gruvbox' || l:theme =~ 'gruvbox8'
-        let l:theme = clap_settings#themes#default_theme('onehalfdark', 'onehalflight')
+        let l:theme = s:default_theme('onehalfdark', 'onehalflight')
     endif
 
     if l:theme ==# 'atom'
@@ -93,24 +131,18 @@ function! clap_settings#themes#get() abort
     return l:theme
 endfunction
 
-function! clap_settings#themes#refresh() abort
-    if exists('g:clap')
-        call clap#highlighter#clear_display()
-    endif
-    call clap#themes#init()
-endfunction
-
 function! clap_settings#themes#set(theme) abort
     let l:theme = a:theme
 
     if index(s:clap_external_themes, l:theme) > -1
         unlet! g:clap_theme
-        call clap_settings#themes#refresh()
+        call s:refresh()
+        call s:apply_patches(l:theme)
         return
     endif
 
     if index(s:clap_themes, l:theme) < 0
-        let l:theme = clap_settings#themes#default_theme()
+        let l:theme = s:default_theme()
     endif
 
     " echomsg 'l:theme:' l:theme
@@ -124,28 +156,19 @@ function! clap_settings#themes#set(theme) abort
     endif
 
     let g:clap_theme = l:theme
-    call clap_settings#themes#refresh()
-endfunction
-
-function! clap_settings#themes#apply_patches(...) abort
-    highlight! link ClapIndicator ClapInput
-    let l:theme = get(a:, 1, '')
-    if l:theme == 'nord'
-        call clap_settings#themes#link_highlight('ClapSpinner', 'ClapInput', 'ctermbg', 'guibg')
-    endif
-    " call clap_settings#themes#link_highlight('ClapSymbol', 'ClapInput', 'ctermbg', 'guibg', { 'ctermfg': 'ctermbg', 'guifg': 'guibg' })
+    call s:refresh()
+    call s:apply_patches(l:theme)
+    unlet! g:clap_theme
 endfunction
 
 function! clap_settings#themes#reload() abort
     let l:theme = clap_settings#themes#get()
     call clap_settings#themes#set(l:theme)
-    call clap_settings#themes#apply_patches(l:theme)
 endfunction
 
 function! clap_settings#themes#init() abort
     let s:clap_themes = map(split(globpath(&rtp, 'autoload/clap/themes/*.vim')), "fnamemodify(v:val, ':t:r')")
     let s:clap_themes_completion = join(s:clap_themes, "\n")
-    call clap_settings#themes#reload()
 endfunction
 
 function! clap_settings#themes#list(...) abort
