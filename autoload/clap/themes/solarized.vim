@@ -89,14 +89,6 @@ function! clap#themes#solarized#init() abort
                     \   'cterm':   'bold'
                     \ },
                     \ }
-        if has('nvim')
-            let s:palette.preview = {
-                        \ 'guifg':   s:base1.hex,
-                        \ 'ctermfg': s:base1.xterm,
-                        \ 'guibg':   s:base02.hex,
-                        \ 'ctermbg': s:base02.xterm
-                        \ }
-        endif
 
         let s:fuzzy = [
                     \   [s:base01.xterm, s:base1.hex],
@@ -172,15 +164,6 @@ function! clap#themes#solarized#init() abort
                     \   'cterm':   'bold',
                     \ },
                     \ }
-
-        if has('nvim')
-            let s:palette.preview = {
-                        \ 'guifg':   s:base01.hex,
-                        \ 'ctermfg': s:base01.xterm,
-                        \ 'guibg':   s:base2.hex,
-                        \ 'ctermbg': s:base2.xterm,
-                        \ }
-        endif
 
         let s:fuzzy = [
                     \   [s:base01.xterm, s:base01.hex],
