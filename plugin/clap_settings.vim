@@ -44,7 +44,7 @@ augroup END
 
 command! -nargs=1 -complete=custom,clap_settings#theme#List ClapTheme call clap_settings#theme#Set(<f-args>)
 
-command! ToggleClapFollowLinks call clap_settings#files#ToggleClapFollowLinks()
+command! ToggleClapFollowLinks call clap_settings#files#ToggleFollowLinks()
 
 command! -bang -nargs=? -complete=dir ClapFiles      call clap_settings#files#run(<q-args>, <bang>0)
 command! -bang -nargs=? -complete=dir ClapGitFiles   call clap_settings#files#git(<q-args>, <bang>0)
