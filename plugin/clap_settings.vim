@@ -37,16 +37,16 @@ let g:clap_grep_no_ignore_vcs = get(g:, 'clap_grep_no_ignore_vcs', 0)
 
 augroup ClapSettings
     autocmd!
-    autocmd VimEnter * call clap_settings#themes#init() | call clap_settings#themes#reload()
-    autocmd VimEnter * call clap_settings#command#Init()
-    autocmd ColorScheme * call clap_settings#themes#reload()
-    autocmd OptionSet background call clap_settings#themes#reload()
+    autocmd VimEnter * call clap_settings#command#Init() | call clap_settings#theme#Init()
+    autocmd ColorScheme * call clap_settings#theme#Apply()
     autocmd FileType clap_input let [b:autopairs_enabled, b:lexima_disabled] = [0, 1]
 augroup END
 
+command! ToggleClapFollowLinks call clap_settings#ToggleClapFollowLinks()
+
+command! -nargs=1 -complete=custom,clap_settings#theme#List ClapTheme call clap_settings#theme#Set(<f-args>)
+
 command! -bang -nargs=? -complete=dir ClapFiles         call clap_settings#files(<q-args>, <bang>0)
 command! -bang -nargs=? -complete=dir ClapFilesAll      call clap_settings#files_all(<q-args>, <bang>0)
-
-command! ToggleClapFollowLinks call clap_settings#ToggleClapFollowLinks()
 
 let g:loaded_clap_settings_vim = 1
