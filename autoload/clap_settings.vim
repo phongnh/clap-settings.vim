@@ -28,3 +28,24 @@ function! clap_settings#files_all(dir, bang) abort
         execute 'lcd' l:cwd
     endtry
 endfunction
+
+function! clap_settings#ClearHighlightGroups() abort
+    let l:highlight_groups = [
+                \ 'ClapFile',
+                \ 'ClapSpinner',
+                \ 'ClapSearchText',
+                \ 'ClapInput',
+                \ 'ClapDisplay',
+                \ 'ClapIndicator',
+                \ 'ClapSelected',
+                \ 'ClapCurrentSelection',
+                \ 'ClapSelectedSign',
+                \ 'ClapCurrentSelectionSign',
+                \ 'ClapPreview',
+                \ ]
+    for l:group in l:highlight_groups
+        if hlexists(l:group)
+            execute 'highlight clear' l:group
+        endif
+    endfor
+endfunction
