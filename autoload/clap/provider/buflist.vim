@@ -109,19 +109,6 @@ function! s:buffers_on_move() abort
   call clap#preview#highlight_header()
 endfunction
 
-function! clap#provider#buflist#preview_target() abort
-  let curline = g:clap.display.getcurline()
-  if empty(curline)
-    return []
-  endif
-  let bufnr = str2nr(s:extract_bufnr(curline))
-  if !has_key(s:line_info, bufnr)
-    return []
-  endif
-  let lnum = matchstr(s:line_info[bufnr], '\d\+')
-  return [expand('#'.bufnr.':p'), lnum]
-endfunction
-
 function! s:action_delete() abort
   let current_matches = g:clap.display.line_count()
   execute 'bdelete' s:current_bufnr
@@ -136,14 +123,13 @@ function! s:actions_title() abort
   return 'Choose action for buffer '.s:current_bufnr.':'
 endfunction
 
-let s:buflist = {}
-let s:buflist.sink = function('s:buffers_sink')
-let s:buflist.source = function('s:buffers')
-let s:buflist.on_move = function('s:buffers_on_move')
-let s:buflist.on_move_async = { -> clap#client#notify_provider('on_move') }
-let s:buflist.syntax = 'clap_buflist'
-let s:buflist.support_open_action = v:true
-let s:buflist.action = {
+let s:buffers = {}
+let s:buffers.sink = function('s:buffers_sink')
+let s:buffers.source = function('s:buffers')
+let s:buffers.on_move = function('s:buffers_on_move')
+let s:buffers.syntax = 'clap_buflist'
+let s:buffers.support_open_action = v:true
+let s:buffers.action = {
       \ 'title': function('s:actions_title'),
       \ '&Delete': function('s:action_delete'),
       \ 'OpenInNew&Tab': { -> clap#selection#try_open('ctrl-t') },
@@ -151,7 +137,7 @@ let s:buflist.action = {
       \ 'Open&Split': { -> clap#selection#try_open('ctrl-x') },
       \ }
 
-let g:clap#provider#buflist# = s:buflist
+let g:clap#provider#buflist# = s:buffers
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
