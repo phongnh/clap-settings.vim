@@ -37,7 +37,8 @@ let g:clap_grep_no_ignore_vcs = get(g:, 'clap_grep_no_ignore_vcs', 0)
 
 augroup ClapSettings
     autocmd!
-    autocmd VimEnter * call clap_settings#command#Init() | call clap_settings#themes#init()
+    autocmd VimEnter * call clap_settings#themes#init() | call clap_settings#themes#reload()
+    autocmd VimEnter * call clap_settings#command#Init()
     autocmd ColorScheme * call clap_settings#themes#reload()
     autocmd OptionSet background call clap_settings#themes#reload()
     autocmd FileType clap_input let [b:autopairs_enabled, b:lexima_disabled] = [0, 1]

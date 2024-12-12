@@ -127,7 +127,7 @@ function! clap_settings#themes#set(theme) abort
     endif
 
     let g:clap_theme = l:theme
-    call s:refresh()
+    call clap_settings#RefreshTheme()
     call s:apply_patches(l:theme)
     unlet! g:clap_theme
 endfunction
