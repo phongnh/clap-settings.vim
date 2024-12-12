@@ -20,7 +20,7 @@ endif
 let g:clap_search_box_border_style  = 'nil'
 let g:clap_current_selection_sign   = { 'text': '» ', 'texthl': 'ClapCurrentSelectionSign', 'linehl': 'ClapCurrentSelection' }
 let g:clap_selected_sign            = { 'text': ' »', 'texthl': 'ClapSelectedSign', 'linehl': 'ClapSelected' }
-let g:clap_prompt_format            = ' %spinner%%forerunner_status%%provider_id%:'
+let g:clap_prompt_format            = ' %spinner%%forerunner_status%%title%:'
 
 let g:clap_insert_mode_only   = v:true
 let g:clap_disable_run_rooter = v:true
