@@ -28,14 +28,14 @@ let g:clap_disable_run_rooter = v:true
 let g:ClapPrompt                      = function('clap_settings#prompt_format')
 let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru#filter')
 
-let g:clap_follow_links    = get(g:, 'clap_follow_links', 0)
-let g:clap_grep_ignore_vcs = get(g:, 'clap_grep_ignore_vcs', 0)
+let g:clap_follow_links       = get(g:, 'clap_follow_links', 0)
+let g:clap_grep_no_ignore_vcs = get(g:, 'clap_grep_no_ignore_vcs', 0)
 
 function! s:build_grep_command() abort
     let g:clap_provider_live_grep_executable = 'rg'
     let g:clap_provider_live_grep_opts = '--color=never -H --no-heading --line-number --smart-case --hidden'
     let g:clap_provider_live_grep_opts .= g:clap_follow_links ? ' --follow' : ''
-    let g:clap_provider_live_grep_opts .= g:clap_grep_ignore_vcs ? ' --no-ignore-vcs' : ''
+    let g:clap_provider_live_grep_opts .= g:clap_grep_no_ignore_vcs ? ' --no-ignore-vcs' : ''
 endfunction
 
 function! s:toggle_clap_live_grep_follow_links() abort
