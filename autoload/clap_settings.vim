@@ -50,6 +50,14 @@ function! clap_settings#ClearHighlightGroups() abort
     endfor
 endfunction
 
+function! clap_settings#RefreshTheme() abort
+    call clap_settings#ClearHighlightGroups()
+    if exists('g:clap')
+        call clap#highlighter#clear_display()
+    endif
+    call clap#themes#init()
+endfunction
+
 function! clap_settings#ToggleFollowLinks() abort
     if g:clap_follow_links == 0
         let g:clap_follow_links = 1

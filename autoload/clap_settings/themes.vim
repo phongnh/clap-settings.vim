@@ -54,35 +54,6 @@ function! s:link_highlight(to_group, from_group, ...) abort
     endif
 endfunction
 
-function! s:clear_highlight_groups() abort
-    let l:highlight_groups = [
-                \ 'ClapFile',
-                \ 'ClapSpinner',
-                \ 'ClapSearchText',
-                \ 'ClapInput',
-                \ 'ClapDisplay',
-                \ 'ClapIndicator',
-                \ 'ClapSelected',
-                \ 'ClapCurrentSelection',
-                \ 'ClapSelectedSign',
-                \ 'ClapCurrentSelectionSign',
-                \ 'ClapPreview',
-                \ ]
-    for l:group in l:highlight_groups
-        if hlexists(l:group)
-            execute 'highlight clear' l:group
-        endif
-    endfor
-endfunction
-
-function! s:refresh() abort
-    call s:clear_highlight_groups()
-    if exists('g:clap')
-        call clap#highlighter#clear_display()
-    endif
-    call clap#themes#init()
-endfunction
-
 function! s:apply_patches(...) abort
     highlight! link ClapIndicator ClapInput
     let l:theme = get(a:, 1, '')
@@ -136,7 +107,7 @@ function! clap_settings#themes#set(theme) abort
 
     if index(s:clap_external_themes, l:theme) > -1
         unlet! g:clap_theme
-        call s:refresh()
+        call clap_settings#RefreshTheme()
         call s:apply_patches(l:theme)
         return
     endif
