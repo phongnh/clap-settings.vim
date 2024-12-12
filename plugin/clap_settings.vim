@@ -42,11 +42,13 @@ augroup ClapSettings
     autocmd FileType clap_input let [b:autopairs_enabled, b:lexima_disabled] = [0, 1]
 augroup END
 
-command! ToggleClapFollowLinks call clap_settings#ToggleClapFollowLinks()
-
 command! -nargs=1 -complete=custom,clap_settings#theme#List ClapTheme call clap_settings#theme#Set(<f-args>)
 
-command! -bang -nargs=? -complete=dir ClapFiles         call clap_settings#files(<q-args>, <bang>0)
-command! -bang -nargs=? -complete=dir ClapFilesAll      call clap_settings#files_all(<q-args>, <bang>0)
+command! ToggleClapFollowLinks call clap_settings#files#ToggleClapFollowLinks()
+
+command! -bang -nargs=? -complete=dir ClapFiles      call clap_settings#files#run(<q-args>, <bang>0)
+command! -bang -nargs=? -complete=dir ClapGitFiles   call clap_settings#files#git(<q-args>, <bang>0)
+command! -bang -nargs=? -complete=dir ClapMyFiles    call clap_settings#files#myfiles(<q-args>, <bang>0)
+command! -bang -nargs=? -complete=dir ClapMyAllFiles call clap_settings#files#myallfiles(<q-args>, <bang>0)
 
 let g:loaded_clap_settings_vim = 1

@@ -1,7 +1,7 @@
 function! s:BuildFindCommand() abort
     let l:find_commands = {
-                \ 'fd': 'fd --type file --color never --hidden',
-                \ 'rg': 'rg --files --color never --ignore-dot --ignore-parent --hidden',
+                \ 'fd': 'fd --base-directory %s --type file --color never --hidden',
+                \ 'rg': 'rg %s --files --color never --ignore-dot --ignore-parent --hidden',
                 \ }
     let g:clap_find_command = l:find_commands[g:clap_find_tool ==# 'rg' ? 'rg' : 'fd']
     let g:clap_find_command .= (g:clap_follow_links ? ' --follow' : '')
@@ -11,8 +11,8 @@ endfunction
 
 function! s:BuildFindAllCommand() abort
     let l:find_all_commands = {
-                \ 'fd': 'fd --type file --color never --no-ignore --exclude .git --hidden --follow',
-                \ 'rg': 'rg --files --color never --no-ignore --exclude .git --hidden --follow',
+                \ 'fd': 'fd --base-directory %s --type file --color never --no-ignore --exclude .git --hidden --follow',
+                \ 'rg': 'rg %s --files --color never --no-ignore --exclude .git --hidden --follow',
                 \ }
     let g:clap_find_all_command = l:find_all_commands[g:clap_find_tool ==# 'rg' ? 'rg' : 'fd']
     return g:clap_find_all_command
