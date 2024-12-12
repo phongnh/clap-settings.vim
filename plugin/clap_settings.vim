@@ -30,6 +30,17 @@ let g:clap_disable_run_rooter = v:true
 let g:ClapPrompt                      = function('clap_settings#prompt_format')
 let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru#filter')
 
+" Root markers
+let g:clap_project_root_markers = ['.git', '.git/', '.hg', '.svn', '.bzr', '_darcs'] + get(g:, 'clap_file_root_markers', [
+            \ 'Gemfile',
+            \ 'rebar.config',
+            \ 'mix.exs',
+            \ 'Cargo.toml',
+            \ 'shard.yml',
+            \ 'go.mod',
+            \ '.root',
+            \ ])
+
 let g:clap_find_tool          = get(g:, 'clap_find_tool', 'fd')
 let g:clap_find_no_ignore_vcs = get(g:, 'clap_find_no_ignore_vcs', 0)
 let g:clap_follow_links       = get(g:, 'clap_follow_links', 0)
