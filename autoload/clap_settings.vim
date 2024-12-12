@@ -49,3 +49,14 @@ function! clap_settings#ClearHighlightGroups() abort
         endif
     endfor
 endfunction
+
+function! clap_settings#ToggleFollowLinks() abort
+    if g:clap_follow_links == 0
+        let g:clap_follow_links = 1
+        echo 'Clap follows symlinks!'
+    else
+        let g:clap_follow_links = 0
+        echo 'Clap does not follow symlinks!'
+    endif
+    call clap_settings#command#Init()
+endfunction

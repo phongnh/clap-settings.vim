@@ -7,6 +7,8 @@ if exists('g:loaded_clap_settings_vim')
     finish
 endif
 
+" let g:clap_cache_directory = expand('$HOME/.cache/vim/clap')
+
 let g:clap_open_preview = get(g:, 'clap_open_preview', 'always')
 
 if g:clap_open_preview ==# 'never'
@@ -28,45 +30,22 @@ let g:clap_disable_run_rooter = v:true
 let g:ClapPrompt                      = function('clap_settings#prompt_format')
 let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru#filter')
 
+let g:clap_find_tool          = get(g:, 'clap_find_tool', 'fd')
+let g:clap_find_no_ignore_vcs = get(g:, 'clap_find_no_ignore_vcs', 0)
 let g:clap_follow_links       = get(g:, 'clap_follow_links', 0)
 let g:clap_grep_no_ignore_vcs = get(g:, 'clap_grep_no_ignore_vcs', 0)
 
-function! s:BuildGrepCommand() abort
-    let g:clap_provider_live_grep_executable = 'rg'
-    let g:clap_provider_live_grep_opts = '--color=never -H --no-heading --line-number --smart-case --hidden'
-    let g:clap_provider_live_grep_opts .= g:clap_follow_links ? ' --follow' : ''
-    let g:clap_provider_live_grep_opts .= g:clap_grep_no_ignore_vcs ? ' --no-ignore-vcs' : ''
-endfunction
-
-function! s:ToggleClapLiveGrepFollowLinks() abort
-    if g:clap_follow_links == 0
-        let g:clap_follow_links = 1
-        echo 'Clap live_grep follows symlinks!'
-    else
-        let g:clap_follow_links = 0
-        echo 'Clap live_grep does not follow symlinks!'
-    endif
-    call s:BuildGrepCommand()
-endfunction
+augroup ClapSettings
+    autocmd!
+    autocmd VimEnter * call clap_settings#command#Init() | call clap_settings#themes#init()
+    autocmd ColorScheme * call clap_settings#themes#reload()
+    autocmd OptionSet background call clap_settings#themes#reload()
+    autocmd FileType clap_input let [b:autopairs_enabled, b:lexima_disabled] = [0, 1]
+augroup END
 
 command! -bang -nargs=? -complete=dir ClapFiles         call clap_settings#files(<q-args>, <bang>0)
 command! -bang -nargs=? -complete=dir ClapFilesAll      call clap_settings#files_all(<q-args>, <bang>0)
 
-command! ToggleClapLiveGrepFollowLinks call <SID>ToggleClapLiveGrepFollowLinks()
-
-function! s:SetupClapSettings() abort
-    call s:BuildGrepCommand()
-    call clap_settings#themes#init()
-    call clap_settings#themes#reload()
-endfunction
-
-command! -nargs=1 -complete=custom,clap_settings#themes#list ClapThemeSet call clap_settings#themes#set(<q-args>)
-
-augroup ClapSettings
-    autocmd!
-    autocmd VimEnter * call <SID>SetupClapSettings()
-    autocmd ColorScheme * call clap_settings#themes#reload()
-    autocmd FileType clap_input let [b:autopairs_enabled, b:lexima_disabled] = [0, 1]
-augroup END
+command! ToggleClapFollowLinks call clap_settings#ToggleClapFollowLinks()
 
 let g:loaded_clap_settings_vim = 1
