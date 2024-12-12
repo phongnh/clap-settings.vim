@@ -31,14 +31,14 @@ let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru#filter')
 let g:clap_follow_links       = get(g:, 'clap_follow_links', 0)
 let g:clap_grep_no_ignore_vcs = get(g:, 'clap_grep_no_ignore_vcs', 0)
 
-function! s:build_grep_command() abort
+function! s:BuildGrepCommand() abort
     let g:clap_provider_live_grep_executable = 'rg'
     let g:clap_provider_live_grep_opts = '--color=never -H --no-heading --line-number --smart-case --hidden'
     let g:clap_provider_live_grep_opts .= g:clap_follow_links ? ' --follow' : ''
     let g:clap_provider_live_grep_opts .= g:clap_grep_no_ignore_vcs ? ' --no-ignore-vcs' : ''
 endfunction
 
-function! s:toggle_clap_live_grep_follow_links() abort
+function! s:ToggleClapLiveGrepFollowLinks() abort
     if g:clap_follow_links == 0
         let g:clap_follow_links = 1
         echo 'Clap live_grep follows symlinks!'
@@ -46,16 +46,16 @@ function! s:toggle_clap_live_grep_follow_links() abort
         let g:clap_follow_links = 0
         echo 'Clap live_grep does not follow symlinks!'
     endif
-    call s:build_grep_command()
+    call s:BuildGrepCommand()
 endfunction
 
 command! -bang -nargs=? -complete=dir ClapFiles         call clap_settings#files(<q-args>, <bang>0)
 command! -bang -nargs=? -complete=dir ClapFilesAll      call clap_settings#files_all(<q-args>, <bang>0)
 
-command! ToggleClapLiveGrepFollowLinks call <SID>toggle_clap_live_grep_follow_links()
+command! ToggleClapLiveGrepFollowLinks call <SID>ToggleClapLiveGrepFollowLinks()
 
-function! s:setup_clap_settings() abort
-    call s:build_grep_command()
+function! s:SetupClapSettings() abort
+    call s:BuildGrepCommand()
     call clap_settings#themes#init()
     call clap_settings#themes#reload()
 endfunction
@@ -64,7 +64,7 @@ command! -nargs=1 -complete=custom,clap_settings#themes#list ClapThemeSet call c
 
 augroup ClapSettings
     autocmd!
-    autocmd VimEnter * call <SID>setup_clap_settings()
+    autocmd VimEnter * call <SID>SetupClapSettings()
     autocmd ColorScheme * call clap_settings#themes#reload()
     autocmd FileType clap_input let [b:autopairs_enabled, b:lexima_disabled] = [0, 1]
 augroup END
