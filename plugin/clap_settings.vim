@@ -26,7 +26,7 @@ let g:clap_insert_mode_only   = v:true
 let g:clap_disable_run_rooter = v:true
 
 let g:ClapPrompt                      = function('clap_settings#prompt_format')
-let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru_filter')
+let g:ClapProviderHistoryCustomFilter = function('clap_settings#mru#filter')
 
 let g:clap_follow_links    = get(g:, 'clap_follow_links', 0)
 let g:clap_grep_ignore_vcs = get(g:, 'clap_grep_ignore_vcs', 0)
