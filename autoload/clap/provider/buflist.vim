@@ -11,7 +11,7 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:cur_tab_only = get(g:, 'clap_provider_buflist_cur_tab_only', v:false)
+let s:cur_tab_only = get(g:, 'clap_provider_buflist_cur_tab_only', get(g:, 'clap_provider_buffers_cur_tab_only', v:false))
 let s:path_shorten = get(g:, 'clap_provider_buflist_path_shorten', v:true)
 let s:path_max_length = get(g:, 'clap_provider_buflist_path_max_length', 45)
 let s:path_separator = has('win32') ? '\' : '/'
@@ -109,6 +109,19 @@ function! s:buffers_on_move() abort
   call g:clap.preview.show(lines)
   call g:clap.preview.setbufvar('&syntax', getbufvar(bufnr, '&syntax'))
   call clap#preview#highlight_header()
+endfunction
+
+function! clap#provider#buflist#preview_target() abort
+  let curline = g:clap.display.getcurline()
+  if empty(curline)
+    return []
+  endif
+  let bufnr = str2nr(s:extract_bufnr(curline))
+  if !has_key(s:line_info, bufnr)
+    return []
+  endif
+  let lnum = matchstr(s:line_info[bufnr], '\d\+')
+  return [expand('#'.bufnr.':p'), lnum]
 endfunction
 
 function! s:action_delete() abort
