@@ -1,3 +1,5 @@
+" Author: Phong Nguyen
+" Description: List the open buffers.
 " Copied from https://github.com/liuchengxu/vim-clap/blob/master/autoload/clap/provider/buffers.vim
 " and changed its buffer listing to the following format:
 "

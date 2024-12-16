@@ -1,3 +1,5 @@
+" Author: Phong Nguyen
+" Description: List the files managed by git.
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 

@@ -1,3 +1,5 @@
+" Author: Phong Nguyen
+" Description: List the open buffers and oldfiles in current working directory in order.
 " Copied from https://github.com/liuchengxu/vim-clap/blob/master/autoload/clap/provider/history.vim
 " and filter for only current working directory
 
