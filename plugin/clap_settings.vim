@@ -12,9 +12,9 @@ endif
 let g:clap_open_preview = get(g:, 'clap_open_preview', 'always')
 
 if g:clap_open_preview ==# 'never'
-    let g:clap_layout = { 'relative': 'editor', 'width': '70%', 'height': '35%', 'row': '25%', 'col': '15%' }
+    let g:clap_layout = { 'relative': 'editor', 'width': '70%', 'height': '40%', 'row': '25%', 'col': '20%' }
 else
-    let g:clap_layout = { 'relative': 'editor', 'width': '70%', 'height': '30%', 'row': '15%', 'col': '15%' }
+    let g:clap_layout = { 'relative': 'editor', 'width': '70%', 'height': '35%', 'row': '15%', 'col': '20%' }
     let g:clap_preview_size = 3
     let g:clap_preview_direction = 'UD'
 endif
