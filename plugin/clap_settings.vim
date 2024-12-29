@@ -9,6 +9,8 @@ endif
 
 " let g:clap_cache_directory = expand('$HOME/.cache/vim/clap')
 
+" Show devicons
+let g:clap_enable_icon = get(g:, 'clap_enable_icon', 0)
 " Always disable icon in live grep
 let g:clap_provider_live_grep_enable_icon = 0
 
