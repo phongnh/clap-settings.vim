@@ -9,6 +9,9 @@ endif
 
 " let g:clap_cache_directory = expand('$HOME/.cache/vim/clap')
 
+" Always disable icon in live grep
+let g:clap_provider_live_grep_enable_icon = 0
+
 let g:clap_open_preview = get(g:, 'clap_open_preview', 'always')
 
 if g:clap_open_preview ==# 'never'
