@@ -1,6 +1,6 @@
 " Theme mappings
 let s:clap_theme_mappings = extend({
-            \ '^\(solarized\|soluarized\|flattened\|neosolarized\)': 'solarized',
+            \ '^\(solarized\|soluarized\|flattened\|neosolarized\)': 'solarized8',
             \ '^\(atom\|habamax\)$': 'atom_dark',
             \ }, get(g:, 'clap_theme_mappings', {}))
 
