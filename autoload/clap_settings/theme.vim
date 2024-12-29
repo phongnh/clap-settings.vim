@@ -1,6 +1,6 @@
 " Theme mappings
 let s:clap_theme_mappings = extend({
-            \ '^\(solarized\|soluarized\|flattened\|neosolarized\)': 'solarized8',
+            \ '^\(solarized\|soluarized\|flattened\|neosolarized\)': 'solarized',
             \ '^\(atom\|habamax\)$': 'atom_dark',
             \ }, get(g:, 'clap_theme_mappings', {}))
 
@@ -30,7 +30,17 @@ function! s:RefreshTheme() abort
     if exists('g:clap')
         call clap#highlighter#clear_display()
     endif
+    call s:ModifyPalette()
     call clap#themes#init()
+endfunction
+
+function! s:ModifyPalette() abort
+    try
+        let palette = g:clap#themes#{g:clap_current_theme}#palette
+        let palette.current_selection_sign.guibg = palette.current_selection.guibg
+        let palette.current_selection_sign.ctermbg = palette.current_selection.ctermbg
+    catch
+    endtry
 endfunction
 
 function! s:ApplyPatches(...) abort
@@ -82,6 +92,7 @@ function! clap_settings#theme#Set(theme) abort
     if !empty(l:theme_path) && filereadable(l:theme_path)
         execute 'source ' . l:theme_path
     endif
+    let g:clap_current_theme = l:theme
     let g:clap_theme = l:theme
     call s:RefreshTheme()
     call s:ApplyPatches()
@@ -104,4 +115,20 @@ function! clap_settings#theme#Init() abort
     elseif !exists('g:clap_current_theme')
         call clap_settings#theme#Apply()
     endif
+    augroup ClapSettingsTheme
+        autocmd!
+        autocmd User ClapOnInitialize call <SID>ClapOnInitialize()
+        autocmd User ClapOnExit call <SID>ClapOnExit()
+    augroup END
+endfunction
+
+function! s:ClapOnInitialize() abort
+    let s:clap_sign_column_hl = hlget('SignColumn', v:true)
+    let sign_column_hl = deepcopy(s:clap_sign_column_hl[0])
+    call extend(sign_column_hl, { 'ctermbg': 'NONE', 'guibg': 'NONE' })
+    call hlset([sign_column_hl])
+endfunction
+
+function! s:ClapOnExit() abort
+    call hlset(s:clap_sign_column_hl)
 endfunction

@@ -20,7 +20,7 @@ let s:blue    = { 'hex': '#268bd2', 'xterm':  '33', 'xterm_hex': '#0087ff' }
 let s:cyan    = { 'hex': '#2aa198', 'xterm':  '37', 'xterm_hex': '#00afaf' }
 let s:green   = { 'hex': '#859900', 'xterm':  '64', 'xterm_hex': '#5f8700' }
 
-function! clap#themes#solarized8#init() abort
+function! clap#themes#solarized_term#init() abort
     if &background == 'dark'
         let s:palette = {
                     \ 'display': {
@@ -62,32 +62,34 @@ function! clap#themes#solarized8#init() abort
                     \   'ctermbg': s:base03.xterm,
                     \ },
                     \ 'current_selection': {
-                    \   'guibg':   s:base03.hex,
-                    \   'ctermbg': s:base03.xterm,
+                    \   'guifg':   s:base2.hex,
+                    \   'ctermfg': s:base2.xterm,
+                    \   'guibg':   s:base02.hex,
+                    \   'ctermbg': s:base02.xterm,
                     \   'gui':     'bold',
                     \   'cterm':   'bold',
                     \ },
                     \ 'current_selection_sign': {
                     \   'guifg':   s:orange.hex,
                     \   'ctermfg': s:orange.xterm,
-                    \   'guibg':   s:base03.hex,
-                    \   'ctermbg': s:base03.xterm,
+                    \   'guibg':   s:base02.hex,
+                    \   'ctermbg': s:base02.xterm,
                     \   'gui':     'bold',
                     \   'cterm':   'bold',
                     \ },
                     \ 'selected': {
                     \   'guifg':   s:blue.hex,
                     \   'ctermfg': s:blue.xterm,
-                    \   'guibg':   s:base03.hex,
-                    \   'ctermbg': s:base03.xterm,
+                    \   'guibg':   s:base02.hex,
+                    \   'ctermbg': s:base02.xterm,
                     \   'gui':     'bold',
                     \   'cterm':   'bold',
                     \ },
                     \ 'selected_sign': {
                     \   'guifg':   s:red.hex,
                     \   'ctermfg': s:red.xterm,
-                    \   'guibg':   s:base03.hex,
-                    \   'ctermbg': s:base03.xterm,
+                    \   'guibg':   s:base02.hex,
+                    \   'ctermbg': s:base02.xterm,
                     \   'gui':     'bold',
                     \   'cterm':   'bold'
                     \ },
@@ -210,10 +212,10 @@ function! clap#themes#solarized8#init() abort
                 \ s:palette.display.guibg
                 \ )
 
-    let g:clap#themes#solarized8#palette = s:palette
+    let g:clap#themes#solarized_term#palette = s:palette
 endfunction
 
-call clap#themes#solarized8#init()
+call clap#themes#solarized_term#init()
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
