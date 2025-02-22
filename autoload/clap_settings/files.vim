@@ -28,9 +28,13 @@ function! clap_settings#files#myfiles(dir, ...) abort
         let l:cwd = getcwd()
         let l:dir = fnamemodify(empty(a:dir) ? '.' : a:dir, ':p:h')
         let l:bang = get(a:, 1, 0)
-        let g:__clap_provider_cwd = l:dir
         execute 'lcd' l:dir
-        execute printf('%s myfiles', l:bang ? 'Clap!' : 'Clap')
+        if exists('g:clap_find_command')
+            let g:__clap_provider_cwd = l:dir
+            execute printf('%s myfiles', l:bang ? 'Clap!' : 'Clap')
+        else
+            execute 'Clap! files' (l:bang ? '--name-only' : '')
+        endif
     finally
         execute 'lcd' l:cwd
     endtry
@@ -41,9 +45,13 @@ function! clap_settings#files#myallfiles(dir, ...) abort
         let l:cwd = getcwd()
         let l:dir = fnamemodify(empty(a:dir) ? '.' : a:dir, ':p:h')
         let l:bang = get(a:, 1, 0)
-        let g:__clap_provider_cwd = l:dir
         execute 'lcd' l:dir
-        execute printf('%s myallfiles', l:bang ? 'Clap!' : 'Clap')
+        if exists('g:clap_find_all_command')
+            let g:__clap_provider_cwd = l:dir
+            execute printf('%s myallfiles', l:bang ? 'Clap!' : 'Clap')
+        else
+            execute 'Clap! files' (l:bang ? '--name-only' : '')
+        endif
     finally
         execute 'lcd' l:cwd
     endtry

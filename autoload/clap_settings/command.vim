@@ -1,21 +1,21 @@
 function! s:BuildFindCommand() abort
-    let l:find_commands = {
-                \ 'fd': 'fd --base-directory %s --type file --color never --hidden',
-                \ 'rg': 'rg %s --files --color never --ignore-dot --ignore-parent --hidden',
-                \ }
-    let g:clap_find_command = l:find_commands[g:clap_find_tool ==# 'rg' ? 'rg' : 'fd']
-    let g:clap_find_command .= (g:clap_follow_links ? ' --follow' : '')
-    let g:clap_find_command .= (g:clap_find_no_ignore_vcs ? ' --no-ignore-vcs' : '')
-    return g:clap_find_command
+    if executable('fd')
+        let g:clap_find_command = 'fd --base-directory %s --type file --color never --hidden'
+        let g:clap_find_command .= (g:clap_follow_links ? ' --follow' : '')
+        let g:clap_find_command .= (g:clap_find_no_ignore_vcs ? ' --no-ignore-vcs' : '')
+    elseif executable('rg')
+        let g:clap_find_command = 'rg %s --files --color never --ignore-dot --ignore-parent --hidden'
+        let g:clap_find_command .= (g:clap_follow_links ? ' --follow' : '')
+        let g:clap_find_command .= (g:clap_find_no_ignore_vcs ? ' --no-ignore-vcs' : '')
+    endif
 endfunction
 
 function! s:BuildFindAllCommand() abort
-    let l:find_all_commands = {
-                \ 'fd': 'fd --base-directory %s --type file --color never --no-ignore --exclude .git --hidden --follow',
-                \ 'rg': 'rg %s --files --color never --no-ignore --exclude .git --hidden --follow',
-                \ }
-    let g:clap_find_all_command = l:find_all_commands[g:clap_find_tool ==# 'rg' ? 'rg' : 'fd']
-    return g:clap_find_all_command
+    if executable('fd')
+        let g:clap_find_all_command = 'fd --base-directory %s --type file --color never --no-ignore --exclude .git --hidden --follow'
+    elseif executable('rg')
+        let g:clap_find_all_command = 'rg %s --files --color never --no-ignore --exclude .git --hidden --follow'
+    endif
 endfunction
 
 function! s:BuildGrepCommand() abort

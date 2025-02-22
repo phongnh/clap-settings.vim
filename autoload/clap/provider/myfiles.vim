@@ -9,8 +9,11 @@ function! s:init() abort
 endfunction
 
 function s:source() abort
-    let cwd = clap#rooter#working_dir()
-    return printf(g:clap_find_command, shellescape(cwd))
+    if exists('g:clap_find_command')
+        let cwd = clap#rooter#working_dir()
+        return printf(g:clap_find_command, shellescape(cwd))
+    endif
+    return []
 endfunction
 
 let s:myfiles = {}

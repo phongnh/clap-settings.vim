@@ -45,14 +45,16 @@ let g:clap_project_root_markers = ['.git', '.git/', '.hg', '.svn', '.bzr', '_dar
             \ '.root',
             \ ])
 
-let g:clap_find_tool          = get(g:, 'clap_find_tool', 'fd')
 let g:clap_find_no_ignore_vcs = get(g:, 'clap_find_no_ignore_vcs', 0)
 let g:clap_follow_links       = get(g:, 'clap_follow_links', 0)
 let g:clap_grep_no_ignore_vcs = get(g:, 'clap_grep_no_ignore_vcs', 0)
 
+" Setup commands
+call clap_settings#command#Init()
+
 augroup ClapSettings
     autocmd!
-    autocmd VimEnter * call clap_settings#command#Init() | call clap_settings#theme#Init()
+    autocmd VimEnter * call clap_settings#theme#Init()
     autocmd ColorScheme * call clap_settings#theme#Apply()
     autocmd FileType clap_input let [b:autopairs_enabled, b:lexima_disabled] = [0, 1]
 augroup END
